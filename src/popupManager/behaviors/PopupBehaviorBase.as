@@ -50,6 +50,11 @@ package popupManager.behaviors
 			item = popup;
 			item.addEventListener(PopupEvent.DISPLAY, item_displayStart);
 			item.addEventListener(PopupEvent.HIDE, item_hideStart);
+			if (item.isShown)
+			{
+				update();
+				//onDisplay();
+			}
 		}
 		public function dispose():void 
 		{

@@ -1,0 +1,11 @@
+- Basic functional:
+	1) init(stage) - attach quick keys && gesstages
+	2) preloader - add/remove
+	3) downTime handler
+	4) resizer
+	
+- ServerConnection:
+	1) simple reqs
+	2) reconnect
+	3) login
+	

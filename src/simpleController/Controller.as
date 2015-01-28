@@ -90,7 +90,7 @@ package simpleController
 				{
 					dispatchCE(ControllerEvent.GESSTURER_ABORTED, gess);
 				}
-				gesstures = null;
+				gesstures = new Dictionary;
 				item.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
 				item.stage.removeEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
 				item.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
@@ -102,7 +102,7 @@ package simpleController
 		
 		
 		//METHODS:
-		private function startListening():void
+		protected function startListening():void
 		{
 			trace(this, 'START LISTENING');
 			gesstures = new Dictionary();
@@ -113,7 +113,7 @@ package simpleController
 				item.addEventListener(TouchEvent.TOUCH_BEGIN, onGesstureStart);
 		}
 		
-		private function stopListening():void
+		protected function stopListening():void
 		{
 			gesstures = null;
 			item.removeEventListener(MouseEvent.MOUSE_DOWN, onGesstureStart)
@@ -136,7 +136,7 @@ package simpleController
 		//ENGINE:
 		private var gesstures:Dictionary;
 		private var touchGessCount:int = 0;//mouse gess count always = 0/1)
-		protected function onGesstureStart(e:Object):void
+		protected function onGesstureStart(e:Object):Gess
 		{
 			trace(this, onGesstureStart);
 			var gess:Gess;
@@ -172,8 +172,10 @@ package simpleController
 			dispatchCE(ControllerEvent.GESSTURE_START, gess);
 			
 			
+			return gess;
+			
 		}
-		protected function onGesstureUpdate(e:Object):void
+		protected function onGesstureUpdate(e:Object):Gess
 		{
 			var gess:Gess;
 			var id:String;
@@ -192,9 +194,11 @@ package simpleController
 			
 			//dispatch:
 			dispatchCE(ControllerEvent.GESSTURE_UPDATE, gess);
+			
+			return gess;
 		
 		}
-		protected function onGesstureComplete(e:Object):void
+		protected function onGesstureComplete(e:Object):Gess
 		{
 			var gess:Gess;
 			var id:String;
@@ -230,6 +234,8 @@ package simpleController
 			if (res) dispatchCE(res, gess);//tap|swipe
 			//dispatch:
 			dispatchCE(ControllerEvent.GESSTURE_COMPLETE, gess);
+			
+			return gess;
 		}
 		
 	}

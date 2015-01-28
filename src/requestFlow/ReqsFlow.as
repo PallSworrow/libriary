@@ -64,9 +64,10 @@ package requestFlow
 			waitList = waitList.concat(reqs);
 			update();
 		}
-		public function setTimerLimit(maxReqs:int, inPeriod:int):void
+		public function set callInterval(value:int):void
 		{
-			
+			if (value < 0) value = 0;
+			interval = value
 		}
 		private function update():void
 		{

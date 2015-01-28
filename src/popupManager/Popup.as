@@ -6,7 +6,7 @@ package popupManager
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
-	import popupManager.interfaces.Ipopup;
+	import popupManager.interfaces.*;
 	import requestFlow.*;
 	/**
 	 * ...

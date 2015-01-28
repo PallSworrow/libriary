@@ -41,9 +41,10 @@ package requestFlow
 		
 		private var interval:int = 0;
 		private var intervalTimer:uint;
+		private var _flowSize:int;
 		public function ReqsFlow(name:String, maxFlowSize:int=-1) 
 		{
-			flowSize = maxFlowSize;
+			_flowSize = maxFlowSize;
 			if (flowList[name]) throw Error('name ' + name + 'is already used for some request flow');
 			_name = name;
 			//_order = order;
@@ -142,6 +143,19 @@ package requestFlow
 		public function get name():String 
 		{
 			return _name;
+		}
+		
+		public function get flowSize():int 
+		{
+			return _flowSize;
+		}
+		
+		public function set flowSize(value:int):void 
+		{
+			if (value < 1 && value != -1) value = 1;
+			if (_flowSize == value) return;
+			_flowSize = value;
+			update();
 		}
 		
 	

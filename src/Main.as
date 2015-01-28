@@ -7,6 +7,8 @@ package
 	import flash.text.TextField;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
+	import popupManager.Popup;
+	import popupManager.PopupEngine;
 	import simpleController.Controller;
 	import simpleController.events.ControllerEvent;
 	import simpleController.events.MultitouchEvent;
@@ -47,6 +49,16 @@ package
 			tf.autoSize = 'center';
 			
 			addEventListener(TouchEvent.TOUCH_BEGIN, touchBegin);
+			
+			PopupEngine.init(800, 600, this);
+			
+			var s:Sprite = new Sprite();
+			s.graphics.beginFill(0xdf1f55, 1);
+			s.graphics.drawRect(100, 0, 200, 200);
+			s.graphics.endFill();
+			
+			var popup:Popup = new Popup(s);
+			popup.show();
 		}
 		
 		private function touchBegin(e:TouchEvent):void 

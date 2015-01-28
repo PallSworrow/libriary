@@ -10,6 +10,7 @@ package popupManager
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.filters.BlurFilter;
 	/**
 	 * ...
 	 * @author 

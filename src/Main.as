@@ -1,12 +1,21 @@
 package 
 {
+	import layouts.glifs.LayoutMethodBase;
+	import layouts.glifs.LayoutMethodProps;
 	import adobe.utils.CustomActions;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.text.TextField;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
+	import flash.utils.setInterval;
+	import layouts.glifs.Glif;
+	import layouts.glifs.GlifEvent;
+	import layouts.glifs.Layout;
+	import layouts.GlifType;
+	import layouts.methods.VertivalList;
 	import popupManager.Popup;
 	import popupManager.PopupEngine;
 	import simpleController.Controller;
@@ -22,60 +31,60 @@ package
 	public class Main extends Sprite 
 	{
 		private var tf:TextField;
+		private var layout:Layout
 		
 		public function Main():void 
-		{
-			Multitouch.inputMode=MultitouchInputMode.TOUCH_POINT;
-			var sprite:Sprite = new Sprite();
-			sprite.graphics.beginFill(0x234433, 1);
-			sprite.graphics.drawRect(0, 0, 200, 200);
-			sprite.graphics.endFill();
+		{ 
+			layout = new Layout();
+			addChild(layout);
 			
-			var ctrl:Controller = new MultitouchController(sprite);
-			//ctrl.addEventListener(ControllerEvent.TAP, handler);
-			//ctrl.addEventListener(ControllerEvent.SWIPE, handler);
-			//ctrl.addEventListener(ControllerEvent.GESSTURE_START, handler);
-			ctrl.addEventListener(MultitouchEvent.DRAGGING, handler);
-			//ctrl.addEventListener(ControllerEvent.GESSTURE_COMPLETE, handler);
-			
-			var box:Sprite = new Sprite();
-			box.x = 100;
-			box.y = 100;
-			box.addChild(sprite);
-			addChild(box);
-			
-			tf = new TextField();
-			addChild(tf);
-			tf.autoSize = 'center';
-			
-			addEventListener(TouchEvent.TOUCH_BEGIN, touchBegin);
-			
-			PopupEngine.init(800, 600, this);
-			
-			var s:Sprite = new Sprite();
-			s.graphics.beginFill(0xdf1f55, 1);
-			s.graphics.drawRect(100, 0, 200, 200);
-			s.graphics.endFill();
-			
-			var popup:Popup = new Popup(s);
-			popup.show();
-		}
+			var obj:DisplayObject
+			for (var i:int = 0; i < 10; i++) 
+			{
+				obj = glifFactory();
+				
+				//trace('CREATE', obj.height);
+				layout.addChild(obj);
+			}
+			layout.method = new VertivalList();
+		/*	
+			setInterval(function()
+			{
+				var item:Sprite = layout.getChildAt(Math.floor(Math.random()*layout.numChildren)) as Sprite;
+				item.graphics.clear();
+				item.graphics.beginFill(Math.random() * 0xdddddd);
+				item.graphics.drawRect(0, 0, Math.random() * 60 + 60, Math.random() * 60 + 60);
+				item.graphics.endFill();
+				item.dispatchEvent(new GlifEvent(GlifEvent.HEIGHT_CHANGE));
+			},1000);*/
+			addEventListener(MouseEvent.CLICK, click);
+			trace(layout.height);
 		
-		private function touchBegin(e:TouchEvent):void 
-		{
-			tf.appendText('TOUCH BEGIN \n');
-		}
-		
-		private function handler(e:MultitouchEvent):void 
-		{
-			e.controller.item.x += e.gessture.lastStepX;
-			e.controller.item.y += e.gessture.lastStepY;
-			tf.text = String(e.gessture.numTouches)+'\n';
-			
 			
 		}
 		
-		
+		private function click(e:MouseEvent):void 
+		{
+			var params:LayoutMethodProps = new LayoutMethodProps();
+			//params.intervalY = 10;
+			params.forceSizeIgnoreNonGlifs = true;
+			params.forceSize = true;
+			params.maxLineHeight = 60;
+			params.overrideSizeGetters = true;
+			layout.method.properties = params;
+			trace('CLICK');
+			trace(layout.height);
+		}
+			
+		private function glifFactory():Sprite
+		{
+			var res:Sprite = new Sprite();
+			res.graphics.beginFill(Math.random() * 0xdddddd);
+			res.graphics.drawRect(0, 0, Math.random() * 60 + 60, Math.random() * 60 + 60);
+			res.graphics.endFill();
+			return res;
+			
+		}
 		
 	}
 	

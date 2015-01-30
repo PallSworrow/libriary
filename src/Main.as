@@ -1,6 +1,7 @@
 package 
 {
 	import _examples.ControllerExample;
+	import _examples.ScrollerExample;
 	import constants.AlignType;
 	import _examples.LayoutUsageExample;
 	import layouts.glifs.LayoutMethodBase;
@@ -38,7 +39,7 @@ package
 	
 		public function Main():void 
 		{ 
-			addChild(new ControllerExample);
+			addChild(new ScrollerExample);
 			//addChild(new LayoutUsageExample());
 			
 		}

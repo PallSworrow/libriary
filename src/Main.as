@@ -1,7 +1,8 @@
 package 
 {
+	import _examples.ControllerExample;
 	import constants.AlignType;
-	import examples.LayoutUsage;
+	import _examples.LayoutUsageExample;
 	import layouts.glifs.LayoutMethodBase;
 	import layouts.glifs.LayoutMethodProps;
 	import adobe.utils.CustomActions;
@@ -37,8 +38,8 @@ package
 	
 		public function Main():void 
 		{ 
-			
-			addChild(new LayoutUsage());
+			addChild(new ControllerExample);
+			//addChild(new LayoutUsageExample());
 			
 		}
 		

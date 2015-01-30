@@ -48,8 +48,6 @@ package layouts.methods
 			var itemWidth:int;
 			var x:int = offsetX;
 			var y:int = offsetY;
-			trace(JSON.stringify(properties));
-			trace('border:', border);
 			
 			var resX:int;
 			var resY:int;
@@ -58,25 +56,20 @@ package layouts.methods
 				item = currentLayout.getChildAt(i);
 				
 				itemWidth = item.width;
-				//if (maxWidth > 0 && itemWidth > maxWidth) itemWidth = maxWidth;
-				//if (minWidth > 0 && itemWidth < minWidth) itemWidth = minWidth;
+				if (maxWidth > 0 && itemWidth > maxWidth) itemWidth = maxWidth;
+				if (minWidth > 0 && itemWidth < minWidth) itemWidth = minWidth;
 				
 				itemHeight = item.height;
-				//if (maxHeight > 0 && itemHeight > maxHeight) itemHeight = maxHeight;
-				//if (minHeight > 0 && itemHeight < minHeight) itemHeight = minHeight;
+				if (maxHeight > 0 && itemHeight > maxHeight) itemHeight = maxHeight;
+				if (minHeight > 0 && itemHeight < minHeight) itemHeight = minHeight;
 				
 				
 				
-				trace('PLACE ITEM', i);
-				trace('size: ' + itemWidth, itemHeight);
-				trace('offset: ' + x, y);
-				trace('lineHeight: ' + lineheight);
 				
 				if (x + itemWidth > border)
 				{
 					if (x==offsetX)//first?
 					{
-						trace('bigger then layout width');
 						
 						lineheight = itemHeight;
 						resX = x;
@@ -87,7 +80,6 @@ package layouts.methods
 					}
 					else
 					{
-						trace('new line');
 						x = offsetX;
 						y += lineheight + intervalY;
 						
@@ -102,14 +94,12 @@ package layouts.methods
 				}
 				else
 				{
-					trace('next');
 					if (lineheight < itemHeight) lineheight = itemHeight;
 					resX = x;
 					resY = y;
 					
 					x += itemWidth + intervalX;
 				}
-				trace('res pos:', resX, resY,x,y);
 				item.x = resX;
 				item.y = resY;
 				

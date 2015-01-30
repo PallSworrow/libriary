@@ -104,7 +104,7 @@ package simpleController
 		//METHODS:
 		protected function startListening():void
 		{
-			trace(this, 'START LISTENING');
+			//trace(this, 'START LISTENING');
 			gesstures = new Dictionary();
 			if (inputMode == InputMode.MOUSE)
 				item.addEventListener(MouseEvent.MOUSE_DOWN, onGesstureStart)
@@ -138,7 +138,6 @@ package simpleController
 		private var touchGessCount:int = 0;//mouse gess count always = 0/1)
 		protected function onGesstureStart(e:Object):Gess
 		{
-			trace(this, onGesstureStart);
 			var gess:Gess;
 			var id:String;
 			var X:int = e.stageX;

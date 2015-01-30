@@ -1,4 +1,4 @@
-package Swarrow.tools.dataObservers.events {
+package dataObservers.events {
 	import flash.events.Event;
 	
 	/**

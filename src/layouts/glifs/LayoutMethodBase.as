@@ -22,7 +22,7 @@ package layouts.glifs
 		
 		/* INTERFACE layouts.interfaces.IlayoutMethod */
 		
-		public function get type():String 
+		public function get glifType():String 
 		{
 			throw 'must be overrided';
 			return null;

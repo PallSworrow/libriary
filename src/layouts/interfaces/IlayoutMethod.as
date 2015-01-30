@@ -12,7 +12,7 @@ package layouts.interfaces
 		/**
 		 * Glif item type that will be applied to target layout
 		 */
-		function get type():String
+		function get glifType():String
 		function get triggerEventType():String
 		function init(target:Layout):void
 		function dispose():void

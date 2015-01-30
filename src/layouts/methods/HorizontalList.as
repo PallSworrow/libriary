@@ -1,31 +1,31 @@
 package layouts.methods 
 {
-	import com.greensock.TweenMax;
 	import constants.AlignType;
 	import flash.display.DisplayObject;
 	import layouts.glifs.Glif;
 	import layouts.glifs.GlifEvent;
 	import layouts.glifs.LayoutMethodBase;
 	import layouts.GlifType;
+	
 	/**
 	 * ...
 	 * @author 
 	 */
-	public class VertivalList extends LayoutMethodBase 
+	public class HorizontalList extends LayoutMethodBase 
 	{
 		
-		public function VertivalList() 
+		public function HorizontalList() 
 		{
 			super();
 			
 		}
 		override public function get triggerEventType():String 
 		{
-			return GlifEvent.HEIGHT_CHANGE;
+			return GlifEvent.WIDTH_CHANGE;
 		}
 		override public function get glifType():String 
 		{
-			return GlifType.VERTICAL;
+			return GlifType.HORIZONTAL;
 		}
 		override public function update(from:int = 0):void 
 		{
@@ -38,19 +38,18 @@ package layouts.methods
 			//suuported properties:
 			var offsetX:int = properties.offsetX;
 			var offsetY:int = properties.offsetY;
-			var interval:int = properties.intervalY;
+			var interval:int = properties.intervalX;
 			var forceSize:Boolean = properties.forceSize;
 			var fsOnlyGlifs:Boolean = properties.forceSizeIgnoreNonGlifs;
-			var maxLineHeight:int = properties.maxLineHeight;
-			var minLineHeight:int = properties.minLineHeight;
-			var align:String = properties.alignX;
-			var border:int = currentLayout.width;
+			var maxColumnWidth:int = properties.maxColumnWidth;
+			var minColumnWidth:int = properties.minColumnWidth;
+			var align:String = properties.alignY;
+			var border:int = currentLayout.height;
 			
 			//start position:
 			var x:int=offsetX;
 			var y:int = offsetY;
-			
-			var lineHeight:int = 0;
+			var itemWidth:int = 0;
 			try{prev = currentLayout.getChildAt(from - 1);}catch(e:Error){}
 			if (prev)
 			{
@@ -64,21 +63,21 @@ package layouts.methods
 				if (forceSize)//fit the size
 				{
 					if (!fsOnlyGlifs || item is Glif)
-					item.width = border;
+					item.height = border;
 				}
 				
-				lineHeight = item.height;
-				if (maxLineHeight > 0 && lineHeight > maxLineHeight) lineHeight = maxLineHeight;
-				if (minLineHeight > 0 && lineHeight < minLineHeight) lineHeight = minLineHeight;
+				itemWidth = item.width;
+				if (maxColumnWidth > 0 && itemWidth > maxColumnWidth) itemWidth = maxColumnWidth;
+				if (minColumnWidth > 0 && itemWidth < minColumnWidth) itemWidth = minColumnWidth;
 				
-				if(align == AlignType.CENTER)
-				x = offsetX +(border - item.width) / 2;
-				if (align == AlignType.RIGHT)
-				x = offsetX+(border - item.width);
+				if(align == AlignType.MIDDLE)
+				y = offsetY+(border - item.height) / 2;
+				if (align == AlignType.BOTTOM)
+				y = offsetY+(border - item.height);
 				
 				item.x = x;
 				item.y = y;
-				y += lineHeight + interval;
+				x += itemWidth + interval;
 				
 			}
 		}
@@ -86,10 +85,10 @@ package layouts.methods
 		{
 			if (!currentLayout) throw new Error("call method's submethod  bedor init");
 			var item:DisplayObject = currentLayout.getChildAt(currentLayout.numChildren -1);
-			var h:int =  item.height;
-			if (properties.maxLineHeight > 0 && h > properties.maxLineHeight) h = properties.maxLineHeight;;
-			if (properties.minLineHeight > 0 && h < properties.minLineHeight) h = properties.minLineHeight;
-			return item.y + h;
+			var w:int =  item.width;
+			if (properties.maxColumnWidth > 0 && w > properties.maxColumnWidth) w = properties.maxColumnWidth;
+			if (properties.minColumnWidth > 0 && w < properties.minColumnWidth) w = properties.minColumnWidth;
+			return item.x + w;
 		}
 		override public function get widthGetter():Function 
 		{

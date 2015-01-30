@@ -8,18 +8,30 @@ package simpleTools
 	 */
 	public class TypeDescriptor 
 	{
-		
-		public static function iterateVars(obj:Object, typeFilter:Object,handler:Function):void
+		/**
+		 * params specification:
+			 * typeFilter(null) - Class or array of classes that defines types of variables would be iterated
+			 * ignoreAccessors(false) accessors methods won't be iterated as vars
+		 */
+		public static function iterateVars(obj:Object, handler:Function, params:Object=null):void
 		{
-			//example in musician profile
+			if (!params) params = {};
+
 			var filter:Array;
-			if (typeFilter is Array) filter = typeFilter as Array;
-			else if(typeFilter is Class)
+			var ignoreAccsessros:Boolean = false;
+			if (params.typeFilter is Array) filter = params.typeFilter as Array;
+			else if(params.typeFilter is Class)
 			{
-				filter = [typeFilter];
+				filter = [params.typeFilter];
 			}
-			var xmlList:XMLList = describeType(obj).variable;
-			//trace(describeType(obj));
+			ignoreAccsessros = Boolean(params.ignoreAccesssors);
+			
+			
+			
+			var xml:XML = describeType(obj)
+			var xmlList:XMLList = xml.variable;
+			if (!ignoreAccsessros) xmlList += xml.accessor;
+			//trace(xml);
 			
 			var name:String;
 			var type:Class;

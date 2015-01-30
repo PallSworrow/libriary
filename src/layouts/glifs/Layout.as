@@ -29,16 +29,32 @@ package layouts.glifs
 		}
 		private function get updateMethodTrigger():String 
 		{
+			if (_method)
+			return _method.triggerEventType;
+			else
 			return _updateMethodTrigger;
 		}
-		
+			
 		private function set updateMethodTrigger(value:String):void 
 		{
+			if (_method) return;
 			if (!GlifEvent.validate(value))
 			value = null;
 			
 			_updateMethodTrigger = value;
 		}
+		override protected function get glifType():String 
+		{
+			if (_method) return _method.glifType;
+			else
+			return super.glifType;
+		}
+		override protected function set glifType(value:String):void 
+		{
+			if(!method)
+			super.glifType = value;
+		}
+		
 		override protected function updateMethod():void 
 		{
 			callMethod(0);
@@ -133,9 +149,10 @@ package layouts.glifs
 			callMethod(beginIndex);
 		}
 		
-		
+	
 		
 		//PUBLIC:
+		
 		public function update(e:Event = null):void
 		{
 			callMethod(0, true);
@@ -151,7 +168,7 @@ package layouts.glifs
 			_method = value;
 			if (_method) 
 			{
-				glifType = _method.type;
+				//glifType = _method.type;
 				updateMethodTrigger = _method.triggerEventType;
 				_method.init(this);
 			}

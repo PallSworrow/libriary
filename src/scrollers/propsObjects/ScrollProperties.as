@@ -1,4 +1,4 @@
-package scrollers 
+package scrollers.propsObjects 
 {
 	/**
 	 * ...

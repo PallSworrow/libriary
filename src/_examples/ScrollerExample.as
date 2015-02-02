@@ -9,7 +9,8 @@ package _examples
 	import layouts.methods.HorizontalList;
 	import layouts.methods.StringLayout;
 	import layouts.methods.VertivalList;
-	import scrollers.bases.ScrollBox;
+	import scrollers.bases.ScrollBar;
+	import scrollers.bases.ScrollContainer;
 	import scrollers.bases.ScrollViewBase;
 	import scrollers.ScrollController;
 	
@@ -19,14 +20,19 @@ package _examples
 	 */
 	public class ScrollerExample extends Sprite 
 	{
-		private var scrollBox:ScrollBox;
+		private var scrollBox:ScrollContainer;
+		private var sb:ScrollBar;
+		private var controller:ScrollController;
 		private var layout:Layout;
 		private var methods:Array;
 		private var index:int = 0;
 		public function ScrollerExample() 
 		{
 			super();
-			scrollBox = new ScrollBox();
+			controller = new ScrollController();
+			scrollBox = new ScrollContainer();
+			scrollBox.width = 400;
+			scrollBox.height = 500;
 			addChild(scrollBox);
 			
 			var obj:DisplayObject;
@@ -39,11 +45,15 @@ package _examples
 		
 			methods = [new VertivalList(), new HorizontalList(), new StringLayout()];
 			
-		
-			layout.width = 300;
+			sb = new ScrollBar(glifFactory());
+			addChild(sb);
+			sb.x = scrollBox.width;
+			sb.controller = controller;
+			
+			//layout.width = 300;
 			layout.method = methods[0];
 			
-			scrollBox.controller = new ScrollController();
+			scrollBox.controller = controller;
 			
 			scrollBox.controller.scrollTo(1, 2);
 		

@@ -30,7 +30,10 @@ package scrollers.events
 		{
 			return _to;
 		}
-		
+		override public function clone():Event 
+		{
+			return this;
+		}
 	}
 
 }

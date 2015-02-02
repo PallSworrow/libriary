@@ -1,4 +1,4 @@
-package scrollers 
+package scrollers.propsObjects 
 {
 	/**
 	 * ...
@@ -13,6 +13,7 @@ package scrollers
 		public var offsetBegin:int=0;
 		public var offsetEnd:int=0;
 		public var scrollDuration:Number = 0;
+		public var interactiveFlor:Boolean = false;
 		public function ScrollerViewProperies() 
 		{
 			

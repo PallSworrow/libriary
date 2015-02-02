@@ -1,52 +1,56 @@
 package scrollers 
 {
+	import com.greensock.core.TweenCore;
 	import com.greensock.TweenMax;
 	import flash.events.EventDispatcher;
 	import scrollers.events.ScrollerEvent;
 	import scrollers.interfaces.IpagedLayout;
 	import scrollers.interfaces.Iscroller;
+	import scrollers.propsObjects.ScrollProperties;
+	import simpleController.events.ControllerEvent;
 	/**
 	 * ...
 	 * @author 
 	 */
 	public class ScrollController extends EventDispatcher
 	{
-		private var _position:Number = 0;//0-1
+		private var _position:Object = { value:0 };//0-1
 		private var _snapHandler:IpagedLayout;
-		//private var scrollEvent:ScrollerEvent;
 		private var props:ScrollProperties;
 		private var singleEvent:ScrollerEvent;
+		private var currentTween:TweenMax;
 		public function ScrollController() 
 		{
 			super(this);
 			props = new ScrollProperties();
 			
-			singleEvent = new ScrollerEvent(ScrollerEvent.SCROLL, position, 0);
 		}
 		//PRIVATE:
 		private function _scrollTo(pos:Number, duration:Number, onComplete:Function = null, snapToPage:Boolean = true):void
 		{
 			if (pos > 1) pos = 1;
 			if (pos < 0) pos = 0;
-			//scrollEvent = new ScrollerEvent(ScrollerEvent.SCROLL, _position, pos);
-			
+			var from:int = position;
+		
 			if (duration == 0)
 			{
 				position = pos;
-				//scrollEvent = null;
 				if (onComplete) onComplete();
 			}
 			else 
 			{
-				
-				//dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, _position, pos));
-				TweenMax.to(this, duration, { position:pos, onComplete:onComplete } );
+				currentTween = TweenMax.to(_position, duration, { value:pos, onUpdate:onScroll, onComplete:onComplete } );
 			}
 			
+			function onScroll():void
+			{
+				singleEvent = new ScrollerEvent(ScrollerEvent.SCROLL,from,pos);
+				dispatchEvent(singleEvent);
+			}
 			function onScrollComplete():void
 			{
-				//scrollEvent = null;
-				//dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, _position, pos));
+				
+				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos));
 				if(snapToPage)
 				snap(onComplete);
 				else 
@@ -55,6 +59,8 @@ package scrollers
 				}
 			}
 		}
+		
+		//PUBLIC:
 		public function scrollTo(pos:Number, duration:Object=0, onComplete:Function=null):void
 		{
 			var d:Number;
@@ -76,22 +82,18 @@ package scrollers
 		}
 		public function get position():Number 
 		{
-			return _position;
+			return _position.value;
 		}
 		public function set position(value:Number):void 
 		{
-			//var singleEvent:ScrollerEvent;
+			if (currentTween)
+			currentTween.kill();
 			if (value > 1) value = 1;
 			if (value < 0) value = 0;
-			//if (!scrollEvent) 
-			//singleEvent = new ScrollerEvent(ScrollerEvent.SCROLL, position, value);
-			trace('scroll:', _position, value);
-			_position = value;
-			/*if(scrollEvent)
-			{
-				dispatchEvent(scrollEvent);
-			}
-			else*/ dispatchEvent(singleEvent);
+			singleEvent = new ScrollerEvent(ScrollerEvent.SCROLL, position, value);
+			_position.value = value;
+			
+			dispatchEvent(singleEvent);
 		}
 		
 		public function get snapHandler():IpagedLayout 

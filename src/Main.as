@@ -2,8 +2,10 @@ package
 {
 	import _examples.ControllerExample;
 	import _examples.ScrollerExample;
+	import antares.BasicFunctional;
 	import constants.AlignType;
 	import _examples.LayoutUsageExample;
+	import flash.events.Event;
 	import layouts.glifs.LayoutMethodBase;
 	import layouts.glifs.LayoutMethodProps;
 	import adobe.utils.CustomActions;
@@ -39,8 +41,17 @@ package
 	
 		public function Main():void 
 		{ 
+			
 			addChild(new ScrollerExample);
 			//addChild(new LayoutUsageExample());
+			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+		}
+		
+		private function addedToStage(e:Event):void 
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
+			BasicFunctional.init(stage,{multitouch:false});
+			BasicFunctional.initDownTime(function():void { trace('DOWNTIME'); }, 4000);
 			
 		}
 		

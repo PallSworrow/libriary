@@ -4,6 +4,7 @@ package scrollers.bases
 	import flash.display.Sprite;
 	import layouts.glifs.Glif;
 	import layouts.glifs.Layout;
+	import layouts.GlifType;
 	import scrollers.events.ScrollerEvent;
 	import scrollers.interfaces.Iscroller;
 	import scrollers.ScrollController;
@@ -17,26 +18,58 @@ package scrollers.bases
 	{
 		private var _content:DisplayObject;
 		private var maskBox:Sprite;
+		
 
 		private var _isVertical:Boolean = true;
 		private var _controller:ScrollController;
 		private var _draggable:Boolean=true;
 		public function ScrollViewBase(content:DisplayObject) 
 		{
-			super();
+			super(GlifType.DYNAMIC);
+			_content = content;
 			maskBox = new Sprite();
 			maskBox.graphics.beginFill(0x000000);
-			maskBox.graphics.drawRect(0, 0, 100, 100);
+			maskBox.graphics.drawRect(0, 0, width, height);
 			maskBox.graphics.endFill();
-			_content = content;
 			
-			addChild(content);
-			addChild(maskBox);
-			mask = maskBox;
-			
+			super.addChild(content);
+			//addChild(maskBox);
+			//mask = maskBox;
+			masked = true;
 			
 		}
+		override public function addChild(child:DisplayObject):DisplayObject 
+		{
+			throw new Error('this object does not support adding chlidren');
+			return null;
+		}
+		override public function addChildAt(child:DisplayObject, index:int):DisplayObject 
+		{
+			throw new Error('this object does not support adding chlidren');
+			return null;
+		}
 		
+		override public function get width():Number 
+		{
+			return super.width;
+		}
+		
+		override public function set width(value:Number):void 
+		{
+			super.width = value;
+			maskBox.width = value;
+			
+		}
+		override public function get height():Number 
+		{
+			return super.height;
+		}
+		
+		override public function set height(value:Number):void 
+		{
+			super.height = value;
+			maskBox.height = value;
+		}
 		/* INTERFACE scrollers.interfaces.Iscroller */
 		public function get position():Number 
 		{
@@ -80,10 +113,8 @@ package scrollers.bases
 		}
 		public function get maxOffset():int 
 		{
-			if (isVertical)
-			return content.height - maskBox.height;
-			else 
-			return content.width - maskBox.width;
+			throw 'must be overrided';
+			return -1;
 		}
 		
 		public function get offset():int 
@@ -93,15 +124,12 @@ package scrollers.bases
 		}
 		public function get proportion():Number 
 		{
-			if(isVertical)
-			return content.height / maskBox.height;
-			else
-			return content.width / maskBox.width;
+			throw 'must be overrided';
+			return -1;
 		}
 		
 		public function set offset(value:int):void 
 		{
-			//if (_controller) _controller.scrollTo(value / maxOffset,1);
 			if (_controller) _controller.position = value / maxOffset;
 			else 
 			{
@@ -141,6 +169,27 @@ package scrollers.bases
 		protected function get content():DisplayObject 
 		{
 			return _content;
+		}
+		
+		public function get masked():Boolean 
+		{
+			if (maskBox.parent) return true;
+			else return false
+		}
+		
+		public function set masked(value:Boolean):void 
+		{
+			if (value)
+			{
+				super.addChild(maskBox);
+				mask = maskBox;
+			}
+			else if (masked)
+			{
+				super.removeChild(maskBox);
+				mask = null;
+				
+			}
 		}
 		
 		

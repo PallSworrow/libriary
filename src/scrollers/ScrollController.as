@@ -26,31 +26,36 @@ package scrollers
 			
 		}
 		//PRIVATE:
-		private function _scrollTo(pos:Number, duration:Number, onComplete:Function = null, snapToPage:Boolean = true):void
+		private function _scrollTo(pos:Number, duration:Number, onComplete:Function = null, snapToPage:Boolean = true,trigger:Object = 'external'):void
 		{
+			
 			if (pos > 1) pos = 1;
 			if (pos < 0) pos = 0;
 			var from:int = position;
-		
+		//
+			//trace('Scroll to:', from, pos, trigger);
 			if (duration == 0)
 			{
-				position = pos;
+				_position.value = pos;
+				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, pos,0,trigger));
+				//dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL, from, pos,trigger));
 				if (onComplete) onComplete();
 			}
 			else 
 			{
+				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, pos,duration,trigger));
 				currentTween = TweenMax.to(_position, duration, { value:pos, onUpdate:onScroll, onComplete:onComplete } );
 			}
 			
 			function onScroll():void
 			{
-				singleEvent = new ScrollerEvent(ScrollerEvent.SCROLL,from,pos);
-				dispatchEvent(singleEvent);
+				//singleEvent = new ScrollerEvent(ScrollerEvent.SCROLL,from,pos,trigger);
+				//dispatchEvent(singleEvent);
 			}
 			function onScrollComplete():void
 			{
 				
-				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos));
+				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos,duration));
 				if(snapToPage)
 				snap(onComplete);
 				else 
@@ -61,13 +66,20 @@ package scrollers
 		}
 		
 		//PUBLIC:
-		public function scrollTo(pos:Number, duration:Object=0, onComplete:Function=null):void
+		public function scrollTo(pos:Number, duration:Object=0, onComplete:Function=null,trigger:Object = 'external'):void
 		{
+			
+			if (currentTween)
+			{
+				currentTween.kill();
+				currentTween = null;
+			}
 			var d:Number;
 			if (duration is Number && duration >=0) d = Number(duration);
 			else d = props.scrollDuration;
 			
-			_scrollTo(pos, d, onComplete,props.snapToPages);
+			
+			_scrollTo(pos, d, onComplete,props.snapToPages,trigger);
 		}
 		public function snap(onComplete:Function=null):void
 		{
@@ -86,14 +98,18 @@ package scrollers
 		}
 		public function set position(value:Number):void 
 		{
-			if (currentTween)
-			currentTween.kill();
+			/*if (currentTween)
+			{
+				currentTween.kill();
+				currentTween = null;
+			}
+			var from:Number = _position.value;
 			if (value > 1) value = 1;
 			if (value < 0) value = 0;
-			singleEvent = new ScrollerEvent(ScrollerEvent.SCROLL, position, value);
+			//singleEvent = new ScrollerEvent(ScrollerEvent.SCROLL, position, value);
 			_position.value = value;
 			
-			dispatchEvent(singleEvent);
+			dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, value,0));*/
 		}
 		
 		public function get snapHandler():IpagedLayout 

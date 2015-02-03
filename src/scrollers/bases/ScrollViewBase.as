@@ -1,5 +1,6 @@
 package scrollers.bases 
 {
+	import com.greensock.TweenMax;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import layouts.glifs.Glif;
@@ -7,6 +8,7 @@ package scrollers.bases
 	import layouts.GlifType;
 	import scrollers.events.ScrollerEvent;
 	import scrollers.interfaces.Iscroller;
+	import scrollers.propsObjects.ScrollerViewProperies;
 	import scrollers.ScrollController;
 	import simpleController.Controller;
 	
@@ -16,15 +18,18 @@ package scrollers.bases
 	 */
 	public class ScrollViewBase extends Glif implements Iscroller
 	{
+		private var _currentTween:TweenMax;
 		private var _content:DisplayObject;
 		private var maskBox:Sprite;
-		
 
 		private var _isVertical:Boolean = true;
 		private var _controller:ScrollController;
 		private var _draggable:Boolean=true;
+		private var _props:ScrollerViewProperies;
 		public function ScrollViewBase(content:DisplayObject) 
 		{
+			
+			props = new ScrollerViewProperies();
 			super(GlifType.DYNAMIC);
 			_content = content;
 			maskBox = new Sprite();
@@ -38,6 +43,14 @@ package scrollers.bases
 			masked = true;
 			
 		}
+		protected function addElement(element:DisplayObject):void
+		{
+			super.addChild(element);
+		}
+		protected function removeElement(element:DisplayObject):void
+		{
+			super.removeChild(element);
+		}
 		override public function addChild(child:DisplayObject):DisplayObject 
 		{
 			throw new Error('this object does not support adding chlidren');
@@ -47,6 +60,22 @@ package scrollers.bases
 		{
 			throw new Error('this object does not support adding chlidren');
 			return null;
+		}
+		
+		
+		
+		
+		
+		/* INTERFACE scrollers.interfaces.Iscroller */
+		
+		public function get props():ScrollerViewProperies 
+		{
+			return _props;
+		}
+		
+		public function set props(value:ScrollerViewProperies):void 
+		{
+			_props = value;
 		}
 		
 		override public function get width():Number 
@@ -79,15 +108,17 @@ package scrollers.bases
 		
 		public function set position(value:Number):void 
 		{
+			if (value > 1) value == 1;
+			if (value < 0) value = 0;
 			if (_controller) _controller.position = value;
 			_position = value;
 		}
 		
 		public function set controller(value:ScrollController):void 
 		{
-			if (_controller) _controller.removeEventListener(ScrollerEvent.SCROLL, onControllerUpdate);
+			if (_controller) _controller.removeEventListener(ScrollerEvent.SCROLL_START, onControllerStartScroll);
 			_controller = value;
-			if (_controller) _controller.addEventListener(ScrollerEvent.SCROLL, onControllerUpdate);
+			if (_controller) _controller.addEventListener(ScrollerEvent.SCROLL_START, onControllerStartScroll);
 		}
 		
 		public function get draggable():Boolean 
@@ -104,6 +135,7 @@ package scrollers.bases
 		{
 			return _controller;
 		}
+			
 		
 		
 		
@@ -130,21 +162,81 @@ package scrollers.bases
 		
 		public function set offset(value:int):void 
 		{
-			if (_controller) _controller.position = value / maxOffset;
+			if (_controller) _controller.scrollTo(value / maxOffset,0,null,this);
 			else 
 			{
 				_offset = value;
 			}
 		}
-		
+		public function scrollTo(targPosition:Number, duration:Number, onComplete:Function = null):void 
+		{
+			if (targPosition > 1) targPosition = 1;
+			if (targPosition < 0) targPosition = 0;
+			if (duration < 0) duration = 0;
+			var anim:Object;
+			if (_controller)
+			{
+				currentTween = null;
+				_controller.scrollTo(targPosition, duration, onComplete, 'controller');
+				
+			}
+			else
+			{
+				anim = { position:_position };
+				currentTween = TweenMax.to(anim, duration, { position:targPosition, onComplete:onComplete,
+				onUpdate:function():void
+				{
+					_position = anim.position;
+				}});
+			}
+		}
 		
 		
 		
 		//EVENTS:
-		private function onControllerUpdate(e:ScrollerEvent):void
-		{	
-			_position = _controller.position;
+		protected function onControllerStartScroll(e:ScrollerEvent):void
+		{
+			trace(this, e.type, e.from, e.to, e.duration);
+			if (_position == e.to) return;
+			currentTween = null;
+			var from:Number = _position;
+			var to:Number = e.to;
+			var duration:Number = props.controllerOvertakeDuration;
+			if (duration < e.duration)//?
+			duration = e.duration;
+			
+			if (duration == 0 || (e.trigger == this && props.stiffDrag))
+			{
+				_position = e.to;
+				return;
+			}
+			var anim:Object = { position:from };
+			currentTween = TweenMax.to(anim, duration, { position:to,
+			onUpdate:function():void
+			{
+				_position = anim.position;
+			}});
 		}
+		/*protected function onControllerUpdate(e:ScrollerEvent):void
+		{	
+			
+			var anim:Object;
+			if(props.controllerOvertakeDuration ==0 || e.trigger == this )
+			{
+				currentTween = null;
+				_position = _controller.position;
+			}
+			else
+			{
+				anim = { position:_position };
+				
+				currentTween = TweenMax.to(anim, props.controllerOvertakeDuration, { position:e.to,
+				onUpdate:function():void
+				{
+					_position = anim.position;
+				}});
+			}
+		}*/
 		
 		//INTERNAL:
 		protected function get _offset():int 
@@ -171,13 +263,24 @@ package scrollers.bases
 			return _content;
 		}
 		
-		public function get masked():Boolean 
+		protected function get currentTween():TweenMax 
+		{
+			return _currentTween;
+		}
+		
+		protected function set currentTween(value:TweenMax):void 
+		{
+			if (_currentTween)
+			_currentTween.kill();
+			_currentTween = value;
+		}
+		protected function get masked():Boolean 
 		{
 			if (maskBox.parent) return true;
 			else return false
 		}
 		
-		public function set masked(value:Boolean):void 
+		protected function set masked(value:Boolean):void 
 		{
 			if (value)
 			{
@@ -192,6 +295,7 @@ package scrollers.bases
 			}
 		}
 		
+	
 		
 	}
 

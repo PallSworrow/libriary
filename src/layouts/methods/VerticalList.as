@@ -11,10 +11,10 @@ package layouts.methods
 	 * ...
 	 * @author 
 	 */
-	public class VertivalList extends LayoutMethodBase 
+	public class VerticalList extends LayoutMethodBase 
 	{
 		
-		public function VertivalList() 
+		public function VerticalList() 
 		{
 			super();
 			
@@ -29,7 +29,7 @@ package layouts.methods
 		}
 		override public function update(from:int = 0):void 
 		{
-			//trace(this, JSON.stringify(properties));
+			
 			//main:
 			var item:DisplayObject;
 			var prev:DisplayObject;
@@ -46,6 +46,7 @@ package layouts.methods
 			var align:String = properties.alignX;
 			var border:int = currentLayout.width;
 			
+			trace(this, 'from:',from, 'w:',border,JSON.stringify(properties));
 			//start position:
 			var x:int=offsetX;
 			var y:int = offsetY;

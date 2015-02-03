@@ -1,6 +1,8 @@
 package scrollers.bases 
 {
+	import constants.Direction;
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import layouts.glifs.Layout;
 	import simpleController.Controller;
 	import simpleController.events.ControllerEvent;
@@ -11,47 +13,19 @@ package scrollers.bases
 	public class ScrollContainer extends ScrollViewBase 
 	{
 		private var dragController:Controller;
-		
+		private var tapController:Controller;
+		private var bg:Sprite;
 		public function ScrollContainer() 
 		{
 			super(new Layout());
 			dragController = new Controller(this);
 			dragController.addEventListener(ControllerEvent.GESSTURE_UPDATE, onDragg);
-		}
-		override protected function get _offset():int 
-		{
-			if (isVertical)
-			return - content.y;
-			else
-			return - content.x;
-		}
-		
-		override protected function set _offset(value:int):void 
-		{
-			if (value > maxOffset) value = maxOffset;
-			if (value < 0) value = 0;
+			dragController.addEventListener(ControllerEvent.SWIPE, onSwipe);
 			
-			if (isVertical)
-			{
-				content.x = 0;
-				content.y = -value;
-			}
-			else
-			{
-				content.x = -value;
-				content.y = 0;
-			}
+			updateMethod();
+
 		}
-		
-		private function onDragg(e:ControllerEvent):void 
-		{
-			if(isVertical)
-			offset -= e.gessture.lastStepY;
-			else
-			offset -= e.gessture.lastStepX;
-		}
-		
-		//PUBLic
+		//PUBLIC:
 		override public function addChild(child:DisplayObject):DisplayObject 
 		{
 			return layout.addChild(child);
@@ -80,9 +54,9 @@ package scrollers.bases
 		
 		override public function set width(value:Number):void 
 		{
+			//if (isVertical)
+			//layout.width = value;
 			super.width = value;
-			if (isVertical)
-			layout.width = value;
 		}
 		override public function get height():Number 
 		{
@@ -91,23 +65,9 @@ package scrollers.bases
 		
 		override public function set height(value:Number):void 
 		{
+			//if (!isVertical)
+			//layout.height = value;
 			super.height = value;
-			if (!isVertical)
-			layout.height = value;
-		}
-		override public function get maxOffset():int 
-		{
-			if (isVertical)
-			return content.height - height;
-			else 
-			return content.width - width;
-		}
-		override public function get proportion():Number 
-		{
-			if(isVertical)
-			return content.height / height;
-			else
-			return content.width / width;
 		}
 		override public function get draggable():Boolean 
 		{
@@ -123,6 +83,115 @@ package scrollers.bases
 		{
 			return content as Layout;
 		}
+		//EVENTS:
+		private function onSwipe(e:ControllerEvent):void 
+		{
+			//trace(this,e.type);
+			if (!props.swipeEnabled) return;
+			var res:Number;
+			if (isVertical)
+			{
+				if (e.gessture.vectorDirection == Direction.DOWN || e.gessture.vectorDirection == Direction.UP)
+				res = (_offset - e.gessture.distanceY)/maxOffset;
+			}
+			else
+			{
+				if (e.gessture.vectorDirection == Direction.LEFT || e.gessture.vectorDirection == Direction.RIGHT)
+				res = (_offset - e.gessture.distanceX)/maxOffset;
+			}
+			scrollTo(res, props.swipeOverTakeDuration);
+		}
+	
+		
+		private function onDragg(e:ControllerEvent):void 
+		{
+			if(isVertical)
+			offset -= e.gessture.lastStepY;
+			else
+			offset -= e.gessture.lastStepX;
+		}
+		
+		//PRIVATE:
+		private function updateBg():void
+		{
+			if (props.interactiveFlor && !bg)
+			{
+				bg = new Sprite();
+				addElement(bg);
+				addElement(content);
+			}
+			if (!props.interactiveFlor && bg)
+			{
+				removeChild(bg);
+				bg = null;
+			}
+			if (bg)
+			{
+				if (bg.width == width && bg.height == height) return;
+				bg.graphics.clear();
+				bg.graphics.beginFill(0x000000, 0);
+				bg.graphics.drawRect(0, 0, width, height);
+				bg.graphics.endFill();
+			}
+		}
+		override protected function updateMethod():void 
+		{
+			trace('placeMethod', width,layout.width);
+			if (isVertical)
+			{
+				layout.x = props.offsetX;
+				layout.width = width - props.offsetX * 2;
+				trace('layout.width: ' + layout.width);
+			}
+			else
+			{
+				layout.y = props.offsetY;
+				layout.height = height - props.offsetY * 2;
+			}
+			_offset = _offset;
+			updateBg();
+		}
+		override protected function get _offset():int 
+		{
+			if (isVertical)
+			return props.offsetBegin + props.offsetY - content.y;
+			else
+			return props.offsetBegin + props.offsetX - content.x;
+		}
+		
+		override protected function set _offset(value:int):void 
+		{
+			if (value > maxOffset) value = maxOffset;
+			if (value < 0) value = 0;
+			
+			if (isVertical)
+			{
+				//content.x = 0;
+				content.y = props.offsetBegin + props.offsetY - value;
+			}
+			else
+			{
+				content.x = props.offsetBegin + props.offsetX - value;
+				//content.y = 0;
+			}
+		}
+		
+		
+		override public function get maxOffset():int 
+		{
+			if (isVertical)
+			return content.height - height + props.offsetEnd + props.offsetBegin + props.offsetY*2;
+			else 
+			return content.width -  width +  props.offsetEnd + props.offsetBegin + props.offsetX*2;
+		}
+		override public function get proportion():Number 
+		{
+			if(isVertical)
+			return (content.height + props.offsetEnd - props.offsetBegin) / height;
+			else
+			return (content.width  + props.offsetEnd - props.offsetBegin) / width;
+		}
+		
 	}
 
 }

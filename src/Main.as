@@ -23,7 +23,7 @@ package
 	import layouts.GlifType;
 	import layouts.interfaces.IlayoutMethod;
 	import layouts.methods.HorizontalList;
-	import layouts.methods.VertivalList;
+	import layouts.methods.VerticalList;
 	import popupManager.Popup;
 	import popupManager.PopupEngine;
 	import simpleController.Controller;

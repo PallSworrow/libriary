@@ -15,7 +15,7 @@ package layouts.glifs
 		private var _method:IlayoutMethod;
 		public function Layout() 
 		{
-			super();
+			super(GlifType.DYNAMIC);
 		}
 		
 		//Private
@@ -58,6 +58,7 @@ package layouts.glifs
 		override protected function updateMethod():void 
 		{
 			callMethod(0);
+			
 		}
 		private function callMethod(from:int, externalCall:Boolean = false ):void
 		{

@@ -21,7 +21,7 @@ package simpleController
 		private var _enable:Boolean = true;
 		private var _inputMode:String = InputMode.MOUSE;
 		private var _parameters:ControllerParams;
-		public function Controller(item:InteractiveObject) 
+		public function Controller(item:InteractiveObject=null) 
 		{
 			
 			_parameters = new ControllerParams();

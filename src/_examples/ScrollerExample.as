@@ -8,7 +8,7 @@ package _examples
 	import layouts.glifs.LayoutMethodProps;
 	import layouts.methods.HorizontalList;
 	import layouts.methods.StringLayout;
-	import layouts.methods.VertivalList;
+	import layouts.methods.VerticalList;
 	import scrollers.bases.ScrollBar;
 	import scrollers.bases.ScrollContainer;
 	import scrollers.bases.ScrollViewBase;
@@ -23,8 +23,6 @@ package _examples
 		private var scrollBox:ScrollContainer;
 		private var sb:ScrollBar;
 		private var controller:ScrollController;
-		private var layout:Layout;
-		private var methods:Array;
 		private var index:int = 0;
 		public function ScrollerExample() 
 		{
@@ -41,45 +39,39 @@ package _examples
 				obj = glifFactory();
 				scrollBox.layout.addChild(obj);
 			}
-			layout = scrollBox.layout;
-		
-			methods = [new VertivalList(), new HorizontalList(), new StringLayout()];
 			
-			sb = new ScrollBar(glifFactory());
+			sb = new ScrollBar();
+			sb.height = 400;
 			addChild(sb);
 			sb.x = scrollBox.width;
 			sb.controller = controller;
+			var bg:Sprite = new Sprite();
+			bg.graphics.beginFill(0x999999);
+			bg.graphics.drawRect(0, 0, 100, 100);
+			bg.graphics.endFill();
+			sb.background = bg;
 			
 			//layout.width = 300;
-			layout.method = methods[0];
+			scrollBox.layout.method = new VerticalList();
+			scrollBox.layout.method.properties.alignX = AlignType.CENTER;
+			scrollBox.layout.method.update();
 			
 			scrollBox.controller = controller;
 			
-			scrollBox.controller.scrollTo(1, 2);
-		
+			//scrollBox.scrollTo(1, 2);
+			
+			graphics.lineStyle(1, 0x000000);
+			graphics.drawRect(scrollBox.x, scrollBox.y, scrollBox.width, scrollBox.height);
 			
 		}
 		
-		private function click(e:MouseEvent):void 
-		{
-			
-			var params:LayoutMethodProps = new LayoutMethodProps({intervalX:10});
-			params.intervalY = 10;
-			params.alignX = AlignType.RIGHT;
-			params.parseParams('{"minLineHeight":"100"}');
-			
-			index++;
-			if (index == methods.length) index = 0;
-			layout.method = methods[index];
-			layout.method.properties = params;
-			trace('CLICK');
-		}
+		
 			
 		private function glifFactory():Sprite
 		{
 			var res:Sprite = new Sprite();
 			res.graphics.beginFill(Math.random() * 0xdddddd,0.6);
-			res.graphics.drawRect(0, 0, Math.random() * 60 + 60, Math.random() * 60 + 60);
+			res.graphics.drawRect(0, 0, int(Math.random() * 60) + 60, int(Math.random() * 60) + 60);
 			res.graphics.endFill();
 			return res;
 			

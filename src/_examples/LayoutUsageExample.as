@@ -13,7 +13,7 @@ package _examples
 	import layouts.glifs.LayoutMethodProps;
 	import layouts.interfaces.IlayoutMethod;
 	import layouts.methods.HorizontalList;
-	import layouts.methods.VertivalList;
+	import layouts.methods.VerticalList;
 	
 	/**
 	 * ...
@@ -40,7 +40,7 @@ package _examples
 			 * Объект layout делегирует свое поведения специальным объектам повидениям, исполняющим интерфейс IlayoutMethod
 			 * сейчас написано всего три варианта. Но они легко создаются через наследование(не обязательно) от класса LayoutMethodBase
 			 */
-			methods = [new VertivalList(), new HorizontalList(), new StringLayout()];
+			methods = [new VerticalList(), new HorizontalList(), new StringLayout()];
 			
 			/**
 			 * Добавление происходит через свойство method. 

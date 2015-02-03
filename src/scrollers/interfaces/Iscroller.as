@@ -1,6 +1,7 @@
 package scrollers.interfaces 
 {
 	import flash.events.IEventDispatcher;
+	import scrollers.propsObjects.ScrollerViewProperies;
 	import scrollers.ScrollController;
 	
 	/**
@@ -24,6 +25,11 @@ package scrollers.interfaces
 		function get isVertical():Boolean
 		function get maxOffset():int 
 		function get proportion():Number 
+			
+		function get props():ScrollerViewProperies 
+		function set props(value:ScrollerViewProperies):void 
+		
+		function scrollTo(position:Number, duration:Number, onComplete:Function = null):void
 		
 	}
 	

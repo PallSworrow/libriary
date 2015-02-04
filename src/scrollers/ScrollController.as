@@ -6,7 +6,7 @@ package scrollers
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	import scrollers.events.ScrollerEvent;
-	import scrollers.interfaces.IpageSnaper;
+	import scrollers.interfaces.IpageSnapper;
 	import scrollers.interfaces.Iscroller;
 	import scrollers.propsObjects.ScrollProperties;
 	import simpleController.events.ControllerEvent;
@@ -16,8 +16,9 @@ package scrollers
 	 */
 	public class ScrollController extends EventDispatcher
 	{
+		//такая форма позовляет не делать публичным свойство и при этом использовать tweenMax
 		private var _position:Object = { value:0 };//0-1
-		private var _snapHandler:IpageSnaper;
+		private var _snapHandler:IpageSnapper;
 		private var _props:ScrollProperties;
 		private var singleEvent:ScrollerEvent;
 		private var currentTween:TweenMax;
@@ -31,7 +32,7 @@ package scrollers
 		private function _scrollTo(pos:Number, duration:Number, onComplete:Function = null, snapToPage:Boolean = true,trigger:Object = 'external'):void
 		{
 			
-			if (currentTween)
+			if (currentTween)//Если контроллер выполняет прокуртку - остановить.
 			{
 				currentTween.kill();
 				currentTween = null;
@@ -39,13 +40,13 @@ package scrollers
 			if (pos > 1) pos = 1;
 			if (pos < 0) pos = 0;
 			var from:int = position;
-		//
-			//trace('Scroll to:', from, pos, trigger);
-			if (duration == 0)
+			
+			if (duration == 0)//Мгновенная прокрутка без использования tweenMax
 			{
-				_position.value = pos;
 				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, pos,0,trigger));
-				//dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL, from, pos,trigger));
+				_position.value = pos;
+				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, 0, trigger));
+				
 				if(snapToPage)
 				snap(onComplete);
 				else  if (onComplete)
@@ -61,15 +62,12 @@ package scrollers
 			
 			function onScroll():void
 			{
-				//singleEvent = new ScrollerEvent(ScrollerEvent.SCROLL,from,pos,trigger);
-				//dispatchEvent(singleEvent);
+				//события не отправляются чтобы не генерить так много объектов.
 			}
 			function onScrollComplete():void
 			{
-				
-				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, duration));
-				
-			trace('scroll: ', snapToPage);
+				//прокрутка закончена, snap считается отдельной прокруткой и у него будут собственные start|complete события
+				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, duration,trigger));
 				if(snapToPage)
 				snap(onComplete);
 				else  if (onComplete)
@@ -78,18 +76,28 @@ package scrollers
 				}
 			}
 		}
+		
+		//Оставшийся с поисков решения способ отложить выполнение snap. подумал оставить и сделать настраиваемым. можно удалить
 		private var _snapDelay:uint;
-		public function get snapDelay():uint 
+		protected function get snapDelay():uint 
 		{
 			return _snapDelay;
 		}
 		
-		public function set snapDelay(value:uint):void 
+		protected function set snapDelay(value:uint):void 
 		{
 			if (_snapDelay) clearTimeout(_snapDelay);
 			_snapDelay = value;
 		}
 		//PUBLIC:
+		/**
+		 * 
+		 * @param	pos  - позиция до которой выполнит прокрутку контроллер
+		 * @param	duration - время прокуртки 1 - 1sec
+		 * @param	onComplete - функция, которая будет вызвана после завершения прокрутки(и после snap())
+		 * @param	trigger - объект инициализирующий прокрутку 
+		 * @param	noSnap - отменить флаг snapToPages для этой прокрутки
+		 */
 		public function scrollTo(pos:Number, duration:Object=0, onComplete:Function=null,trigger:Object = 'external', noSnap:Boolean = false):void
 		{
 			
@@ -102,7 +110,6 @@ package scrollers
 		}
 		public function snap(onComplete:Function=null):void
 		{
-			trace('SNAP');
 			if (!snapHandler) 
 			{
 				//error?
@@ -124,26 +131,15 @@ package scrollers
 		}
 		public function set position(value:Number):void 
 		{
-			/*if (currentTween)
-			{
-				currentTween.kill();
-				currentTween = null;
-			}
-			var from:Number = _position.value;
-			if (value > 1) value = 1;
-			if (value < 0) value = 0;
-			//singleEvent = new ScrollerEvent(ScrollerEvent.SCROLL, position, value);
-			_position.value = value;
-			
-			dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, value,0));*/
+			_scrollTo(value, props.scrollDuration, null, props.snapDuration);
 		}
 		
-		public function get snapHandler():IpageSnaper 
+		public function get snapHandler():IpageSnapper 
 		{
 			return _snapHandler;
 		}
 		
-		public function set snapHandler(value:IpageSnaper):void 
+		public function set snapHandler(value:IpageSnapper):void 
 		{
 			_snapHandler = value;
 		}

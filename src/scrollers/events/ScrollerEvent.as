@@ -15,6 +15,14 @@ package scrollers.events
 		private var _to:Number;
 		private var _trigger:Object;
 		private var _duration:Number;
+		/**
+		 * 
+		 * @param	type
+		 * @param	from - положение при начале прокуртки
+		 * @param	to - конечное значение 
+		 * @param	duration - время отведенное на анимацию
+		 * @param	trigger - ссылка на инициатор прокрутки
+		 */
 		public function ScrollerEvent(type:String, from:Number, to:Number,duration:Number, trigger:Object='external') 
 		{
 			_from = from;

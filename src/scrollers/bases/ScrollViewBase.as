@@ -13,26 +13,38 @@ package scrollers.bases
 	import simpleController.Controller;
 	
 	/**
-	 * ...
-	 * @author 
+	 * Это абстрактный класс для написания различных scrollView.
+	 * Его основной функционал в том чтобы обеспечить незацикленное взаимодействие с контроллером и корректное отображение елемента
+	 * Если контроллер не указан - при вызове методы меняющего положение - контент сдвигается сразу же, в противном случае контроллеру отправляется команда, а прокрутка происходит только от прослушивания
+	 * событий ControllerEvent.Scroll_start. в которых указаны как и засколько изменилось значение position контроллера. 
+	 * После получения события, оно обрабатывается в соотвествии с настройками скроллера
+	 * Классы наследуемы от этой основы обязаны переписать акссесоры _offset, maxOffset и пр.(они помечены) для того чтобы определить каким образом смешается объект при скролле.
+	 * 
+	 * @author Pall
 	 */
 	public class ScrollViewBase extends Glif implements Iscroller
 	{
-		private var _currentTween:TweenMax;
+		//displayObjects:
 		private var _content:DisplayObject;
 		private var maskBox:Sprite;
-
+		//vars:
+		//гарантирует что к объекту будет подключено не более одного tween-а.
+		private var _currentTween:TweenMax;
+		//определяет плоскость прокрутки
 		private var _isVertical:Boolean = true;
+		//ссылка на контроллер
 		private var _controller:ScrollController;
-		private var _draggable:Boolean=true;
+		//разрешить перетаскивание мышью/пальцем
+		private var _draggable:Boolean = true;
+		//свойства, обращаясь к которым скроллер определяет как ему отображать/прокручивать содержимое
 		private var _props:ScrollerViewProperies;
 		public function ScrollViewBase(content:DisplayObject) 
 		{
 			
-			props = new ScrollerViewProperies();
-			super(GlifType.DYNAMIC);
-			_content = content;
-			maskBox = new Sprite();
+			props = new ScrollerViewProperies();//props must be never null;
+			super(GlifType.DYNAMIC);//означает что никакие внутренние изменения не повлияют на размер объекта
+			_content = content;//прокручиваемый объект
+			maskBox = new Sprite();//маска - всегда соотвествует размерам объекта
 			maskBox.graphics.beginFill(0x000000);
 			maskBox.graphics.drawRect(0, 0, width, height);
 			maskBox.graphics.endFill();
@@ -40,13 +52,21 @@ package scrollers.bases
 			super.addChild(content);
 			//addChild(maskBox);
 			//mask = maskBox;
-			masked = true;
+			masked = true;//можно выключать, например и scrollBar это свойство по-умолчанию равно false
 			
 		}
+		/**
+		 * Этот метод позволяет добавить объект на сцену елмента вобход публичного addChild(который запрещен инкапсуляции ради) 
+		 * @param	element
+		 */
 		protected function addElement(element:DisplayObject):void
 		{
 			super.addChild(element);
 		}
+		/**
+		 * Этот метод позволяет удалить объект на сцену елмента вобход публичного removeChild
+		 * @param	element
+		 */
 		protected function removeElement(element:DisplayObject):void
 		{
 			super.removeChild(element);
@@ -182,6 +202,7 @@ package scrollers.bases
 			}
 			else
 			{
+				//Независимая от скроллера прокрутка. объект anim создан ради сохранения инкапсуляции, так как в противном случае пришлось бы делать свойство _position публичным.
 				anim = { position:_position };
 				currentTween = TweenMax.to(anim, duration, { position:targPosition, onComplete:onComplete,
 				onUpdate:function():void
@@ -194,6 +215,15 @@ package scrollers.bases
 		
 		
 		//EVENTS:
+		/**
+		 * Контроллер не диспатчит в реальном времени события Scroll он отправляет события только о начале прокутки и ее завершении. В зависимости свойсвт события, 
+		 * свойство скроллера и его текущего положения определяется поведение для самого скролера.
+		 * @param	e:ScrollerEvent
+		 * 			from - с какого значения position начал прокрутку скроллер
+		 * 			to - до какого значения прокручивается скроллер
+		 * 			duration - время отведенное на операцию (1 = 1sec)
+		 * 			trigger - ссылка на объект иницировавший прокрутку. Если прокрутку вызвала внешняя команда - значением будет строка 'external'
+		 */
 		protected function onControllerStartScroll(e:ScrollerEvent):void
 		{
 			//trace(this, e.type, e.from, e.to, e.duration);

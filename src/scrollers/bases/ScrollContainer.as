@@ -4,14 +4,17 @@ package scrollers.bases
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import layouts.glifs.Layout;
-	import scrollers.interfaces.IpageSnaper;
+	import scrollers.interfaces.IpageSnapper;
 	import simpleController.Controller;
 	import simpleController.events.ControllerEvent;
 	/**
-	 * ...
+	 * Этот scrollerView обеспечивает прокрутку содержимого внутри окна с маской. Чем больше offset тем выше "уезжает" контент.
+	 * в качестве конента жестко задан layout, однако к нему есть публичный доступ позволяющий добавлять/удалять елементы, менять свойства и методы расположения.
+	 * Кроме того есть два публичных метода обеспечивающих исполнение интерфейсов IpageSnapper. 
+	 * (тоесть методы определяющиее ближайший offset|postion) соотвествующий расположению елемента внутри layout-a
 	 * @author 
 	 */
-	public class ScrollContainer extends ScrollViewBase implements IpageSnaper
+	public class ScrollContainer extends ScrollViewBase implements IpageSnapper
 	{
 		private var dragController:Controller;
 		private var tapController:Controller;
@@ -19,6 +22,14 @@ package scrollers.bases
 		public function ScrollContainer() 
 		{
 			super(new Layout());
+			/**
+			 * Этот контрлер позволяет перетаскивать содержимое с помощью мыши или тача.
+			 * для прокрутки контроллера используется вызов метода scrollTo
+			 * Если у контроллерер предполагает привязку к страницам(snapToPage), 
+			 * то, чтобы избежать постоянных вызовов snap(), в параметры передается флаг,
+			 * который блочит привязку для текущей прокрутки. 
+			 * И тольк когда drag жест будет завершен выполняется вызов snap(), предварительно проверив, требуется ли он контроллеру.
+			 */
 			dragController = new Controller(this);
 			dragController.addEventListener(ControllerEvent.GESSTURE_UPDATE, onDragg);
 			dragController.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onDraggComplete);
@@ -181,12 +192,10 @@ package scrollers.bases
 		}
 		override protected function updateMethod():void 
 		{
-			//trace('placeMethod', width,layout.width);
 			if (isVertical)
 			{
 				layout.x = props.offsetX;
 				layout.width = width - props.offsetX * 2;
-				//trace('layout.width: ' + layout.width);
 			}
 			else
 			{

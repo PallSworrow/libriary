@@ -5,7 +5,7 @@ package scrollers.interfaces
 	import scrollers.ScrollController;
 	
 	/**
-	 * ...
+	 * интерефейс для любых scrollerView
 	 * @author 
 	 */
 	public interface Iscroller extends IEventDispatcher

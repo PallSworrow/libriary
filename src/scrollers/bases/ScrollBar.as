@@ -12,7 +12,8 @@ package scrollers.bases
 	import simpleController.events.ControllerEvent;
 	
 	/**
-	 * ...
+	 * Экземпляр этого класс отображает брокруку елемента внутри ограниченной области.
+	 * Контенту задаются размеры в зависмости от рамеров объекта и свойства proption.
 	 * @author 
 	 */
 	public class ScrollBar extends ScrollViewBase 
@@ -23,6 +24,7 @@ package scrollers.bases
 		private var _proportion:Number=0.3;
 		private var dragController:Controller;
 		private var tapController:Controller;
+		
 		public function ScrollBar(indicatorView:DisplayObject=null,bg:DisplayObject=null) 
 		{
 			if (!indicatorView) 
@@ -34,7 +36,7 @@ package scrollers.bases
 				indicatorView = sprite;
 			}
 			super(indicatorView);
-			
+			//Здесь использовано два контролера - один для перетаскивания индикаторы(контент), а другой для взимодейсвтия с фоном.
 			dragController = new Controller();
 			dragController.addEventListener(ControllerEvent.GESSTURE_UPDATE, onDragg);
 			dragController.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onDraggComplete);

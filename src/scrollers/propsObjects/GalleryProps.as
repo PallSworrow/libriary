@@ -7,7 +7,6 @@ package scrollers.propsObjects
 	public class GalleryProps 
 	{
 		public var Arrows:Boolean;
-		p
 		public function GalleryProps() 
 		{
 			

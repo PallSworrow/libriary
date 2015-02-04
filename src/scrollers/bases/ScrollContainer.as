@@ -4,13 +4,14 @@ package scrollers.bases
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import layouts.glifs.Layout;
+	import scrollers.interfaces.IpageSnaper;
 	import simpleController.Controller;
 	import simpleController.events.ControllerEvent;
 	/**
 	 * ...
 	 * @author 
 	 */
-	public class ScrollContainer extends ScrollViewBase 
+	public class ScrollContainer extends ScrollViewBase implements IpageSnaper
 	{
 		private var dragController:Controller;
 		private var tapController:Controller;
@@ -20,10 +21,41 @@ package scrollers.bases
 			super(new Layout());
 			dragController = new Controller(this);
 			dragController.addEventListener(ControllerEvent.GESSTURE_UPDATE, onDragg);
+			dragController.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onDraggComplete);
 			dragController.addEventListener(ControllerEvent.SWIPE, onSwipe);
 			
 			updateMethod();
 
+		}
+		
+		
+		/* INTERFACE scrollers.interfaces.IpageSnaper */
+		
+		public function getNearestPagePosition():Number 
+		{
+			return getNearestPageOffset() / maxOffset;
+		}
+		
+		public function getNearestPageOffset():int 
+		{
+			var item:DisplayObject;
+			var dist:int;
+			var min:int = -1;
+			var res:int;
+			for (var i:int = 0; i < layout.numChildren; i++) 
+			{
+				item = layout.getChildAt(i);
+				trace('snap', item, item.x, item.y);
+				if (isVertical) dist = Math.abs(offset - (item.y/*+item.height/2*/));
+				else dist = Math.abs(offset - (item.x+item.width/2));
+				if (min == -1 ||(min > 0 && dist <= min)) 
+				{
+					min = dist;
+					if (isVertical) res = props.offsetBegin + props.offsetY +item.y;
+					else res = props.offsetBegin + props.offsetX + item.x;
+				}
+			}
+			return res;
 		}
 		//PUBLIC:
 		override public function addChild(child:DisplayObject):DisplayObject 
@@ -46,6 +78,7 @@ package scrollers.bases
 		{
 			layout.removeChildren(beginIndex, endIndex);
 		}
+		
 		
 		override public function get width():Number 
 		{
@@ -105,10 +138,22 @@ package scrollers.bases
 		
 		private function onDragg(e:ControllerEvent):void 
 		{
+			var res:int;
 			if(isVertical)
-			offset -= e.gessture.lastStepY;
+			res = offset - e.gessture.lastStepY;
 			else
-			offset -= e.gessture.lastStepX;
+			res = offset - e.gessture.lastStepX;
+			if (controller) controller.scrollTo(res / maxOffset, 0, null, this, true);
+			else 
+			offset = res;
+		}
+		private function onDraggComplete(e:ControllerEvent):void 
+		{
+			if (controller)
+			{
+				if (controller.props.snapToPages)
+				controller.snap();
+			}
 		}
 		
 		//PRIVATE:
@@ -136,12 +181,12 @@ package scrollers.bases
 		}
 		override protected function updateMethod():void 
 		{
-			trace('placeMethod', width,layout.width);
+			//trace('placeMethod', width,layout.width);
 			if (isVertical)
 			{
 				layout.x = props.offsetX;
 				layout.width = width - props.offsetX * 2;
-				trace('layout.width: ' + layout.width);
+				//trace('layout.width: ' + layout.width);
 			}
 			else
 			{

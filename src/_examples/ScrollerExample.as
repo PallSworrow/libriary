@@ -63,6 +63,15 @@ package _examples
 			graphics.lineStyle(1, 0x000000);
 			graphics.drawRect(scrollBox.x, scrollBox.y, scrollBox.width, scrollBox.height);
 			
+			controller.snapHandler = scrollBox;
+			addEventListener(MouseEvent.CLICK, click);
+			
+		}
+		
+		private function click(e:MouseEvent):void 
+		{
+			//trace(scrollBox.getNearestPageOffset(),scrollBox.getNearestPagePosition());
+			//controller.snap();
 		}
 		
 		
@@ -71,7 +80,7 @@ package _examples
 		{
 			var res:Sprite = new Sprite();
 			res.graphics.beginFill(Math.random() * 0xdddddd,0.6);
-			res.graphics.drawRect(0, 0, int(Math.random() * 60) + 60, int(Math.random() * 60) + 60);
+			res.graphics.drawRect(0, 0, /*int(Math.random() * 60) + */100, /*int(Math.random() * 60) +*/ 100);
 			res.graphics.endFill();
 			return res;
 			

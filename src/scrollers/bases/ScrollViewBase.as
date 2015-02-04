@@ -196,14 +196,14 @@ package scrollers.bases
 		//EVENTS:
 		protected function onControllerStartScroll(e:ScrollerEvent):void
 		{
-			trace(this, e.type, e.from, e.to, e.duration);
+			//trace(this, e.type, e.from, e.to, e.duration);
 			if (_position == e.to) return;
 			currentTween = null;
 			var from:Number = _position;
 			var to:Number = e.to;
-			var duration:Number = props.controllerOvertakeDuration;
-			if (duration < e.duration)//?
-			duration = e.duration;
+			var duration:Number = e.duration;
+			if (duration == 0)//?
+			duration = props.controllerOvertakeDuration;
 			
 			if (duration == 0 || (e.trigger == this && props.stiffDrag))
 			{

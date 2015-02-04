@@ -153,7 +153,6 @@ package layouts.glifs
 	
 		
 		//PUBLIC:
-		
 		public function update(e:Event = null):void
 		{
 			callMethod(0, true);

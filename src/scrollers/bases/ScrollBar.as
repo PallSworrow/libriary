@@ -37,6 +37,7 @@ package scrollers.bases
 			
 			dragController = new Controller();
 			dragController.addEventListener(ControllerEvent.GESSTURE_UPDATE, onDragg);
+			dragController.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onDraggComplete);
 			
 			tapController = new Controller(this);
 			tapController.addEventListener(ControllerEvent.TAP, onTap);
@@ -118,13 +119,25 @@ package scrollers.bases
 		//EVENTS:
 		
 		
+		
 		private function onDragg(e:ControllerEvent):void 
 		{
-			//trace(this,e.type);
+			var res:int;
 			if(isVertical)
-			offset = offset + e.gessture.lastStepY;
+			res = offset + e.gessture.lastStepY;
 			else
-			offset = offset +e.gessture.lastStepX;
+			res = offset + e.gessture.lastStepX;
+			if (controller) controller.scrollTo(res / maxOffset, 0, null, this, true);
+			else 
+			offset = res;
+		}
+		private function onDraggComplete(e:ControllerEvent):void 
+		{
+			if (controller)
+			{
+				if (controller.props.snapToPages)
+				controller.snap();
+			}
 		}
 		private function onSwipe(e:ControllerEvent):void 
 		{

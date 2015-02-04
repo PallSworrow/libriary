@@ -19,8 +19,8 @@ package scrollers.propsObjects
 		public var controllerOvertakeDuration:Number = 0.4;//время за которое скроллер догоняет значение position своего контроллера
 		public var swipeEnabled:Boolean = true;//поддержка свайпа
 		public var swipeOverTakeDuration:Number = 0.3;//время за которое будет прокручено расстоняние определенное свайп-жестом
-		public var stiffDrag:Boolean = true;//жесткая привязка к указателю при драге. при false - скроллер будет догонять указатель(палец/мышь) так же как догоняет вой контроллер
-		public var minProprtion:Number = 0.15;
+		public var stiffDrag:Boolean = true;//жесткая привязка к указателю при драге. при false - скроллер будет догонять указатель(палец/мышь) так же как догоняет свой контроллер
+		public var minProprtion:Number = 0.15;//используется для определения наименьшего допустимого размера контента
 		//IN PROJECT:
 		public function ScrollerViewProperies() 
 		{

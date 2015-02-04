@@ -47,7 +47,8 @@ package popupManager.controllers
 		{
 			if (item)
 			{
-				trace('trigger_click');
+				if (item.isShown) return;
+				//trace('trigger_click');
 				if(!item.isShown && !item.currentFlow)
 				e.stopPropagation();
 				item.show(popupflow);
@@ -61,6 +62,7 @@ package popupManager.controllers
 			listenersDelay = setTimeout(function():void
 			{
 				listenersDelay = null;
+				item.currentStage.stage.x+=10;
 				item.currentStage.stage.addEventListener(MouseEvent.CLICK, stage_click);
 				item.source.addEventListener(MouseEvent.CLICK, source_click);
 			},100);
@@ -77,18 +79,17 @@ package popupManager.controllers
 	
 		private function source_click(e:MouseEvent):void 
 		{
-			trace('source_click');
+			//trace('source_click');
 			e.stopPropagation();
 		}
 		
 		private function stage_click(e:MouseEvent):void 
 		{
-			trace('stage_click');
+			//trace('stage_click');
 			item.hide();
 		}
 		
 		/* INTERFACE popups.interfaces.IpopupController */
-		
 		public function init(popup:Popup):void 
 		{
 			item = popup;

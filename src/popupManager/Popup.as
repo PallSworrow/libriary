@@ -46,6 +46,7 @@ package popupManager
 		//PUBLIC:
 		public function show(inFlow:String=null):void
 		{
+			if (isShown) return;
 			if (currentFlow)
 			{
 				throw new Error('popup is already in ' + currentFlow + ' reqsFlow');

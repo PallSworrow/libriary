@@ -3,7 +3,9 @@ package scrollers.bases
 	import constants.Direction;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import layouts.glifs.GlifEvent;
 	import layouts.glifs.Layout;
+	import scrollers.events.ScrollerEvent;
 	import scrollers.interfaces.IpageSnapper;
 	import simpleController.Controller;
 	import simpleController.events.ControllerEvent;
@@ -22,6 +24,7 @@ package scrollers.bases
 		public function ScrollContainer() 
 		{
 			super(new Layout());
+			
 			/**
 			 * Этот контрлер позволяет перетаскивать содержимое с помощью мыши или тача.
 			 * для прокрутки контроллера используется вызов метода scrollTo
@@ -36,7 +39,13 @@ package scrollers.bases
 			dragController.addEventListener(ControllerEvent.SWIPE, onSwipe);
 			
 			updateMethod();
-
+			layout.addEventListener(GlifEvent.SIZE_CHANGE, layout_sizeChange);
+		}
+		
+		private function layout_sizeChange(e:GlifEvent):void 
+		{
+			//updateMethod();
+			dispatchEvent(new ScrollerEvent(ScrollerEvent.PROPRION_CHANGE, 0, proportion, 0, this));
 		}
 		
 		
@@ -241,9 +250,9 @@ package scrollers.bases
 		override public function get proportion():Number 
 		{
 			if(isVertical)
-			return (content.height + props.offsetEnd - props.offsetBegin) / height;
+			return height/(content.height + props.offsetEnd - props.offsetBegin) ;
 			else
-			return (content.width  + props.offsetEnd - props.offsetBegin) / width;
+			return width/(content.width  + props.offsetEnd - props.offsetBegin);
 		}
 		
 	}

@@ -7,6 +7,8 @@ package scrollers.bases
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.security.SignerTrustSettings;
+	import scrollers.events.ScrollerEvent;
+	import scrollers.interfaces.Iscroller;
 	import scrollers.propsObjects.ScrollerViewProperies;
 	import simpleController.Controller;
 	import simpleController.events.ControllerEvent;
@@ -24,6 +26,7 @@ package scrollers.bases
 		private var _proportion:Number=0.3;
 		private var dragController:Controller;
 		private var tapController:Controller;
+		private var _proptionController:Iscroller;
 		
 		public function ScrollBar(indicatorView:DisplayObject=null,bg:DisplayObject=null) 
 		{
@@ -268,8 +271,27 @@ package scrollers.bases
 		
 		public function set proportion(value:Number):void 
 		{
+			if (value > 1) value = 1;
+			if(value<props.minProprtion )value = props.minProprtion 
 			_proportion = value;
 			updateMethod();
+		}
+		
+		public function get proptionController():Iscroller 
+		{
+			return _proptionController;
+		}
+		
+		public function set proptionController(value:Iscroller):void 
+		{
+			if(_proptionController) _proptionController.removeEventListener(ScrollerEvent.PROPRION_CHANGE, proptionController_proprionChange);
+			_proptionController = value;
+			if(_proptionController) _proptionController.addEventListener(ScrollerEvent.PROPRION_CHANGE, proptionController_proprionChange);
+		}
+		
+		private function proptionController_proprionChange(e:ScrollerEvent):void 
+		{
+			proportion = _proptionController.proportion;
 		}
 		
 		

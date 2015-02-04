@@ -8,9 +8,10 @@ package scrollers.events
 	 */
 	public class ScrollerEvent extends Event 
 	{
-		public static const SCROLL:String = 'scroll';
+		//public static const SCROLL:String = 'scroll';
 		public static const SCROLL_START:String = 'scrollstart';
 		public static const SCROLL_COMPLETE:String = 'scrollcomplete';
+		public static const PROPRION_CHANGE:String = 'proptionchange';
 		private var _from:Number;
 		private var _to:Number;
 		private var _trigger:Object;

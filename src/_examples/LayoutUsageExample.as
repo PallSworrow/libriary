@@ -5,6 +5,7 @@ package _examples
 	import flash.events.MouseEvent;
 	import flash.utils.setInterval;
 	import layouts.methods.StringLayout;
+	import layouts.methods.TagsLayout;
 	
 	//dependencies:
 	import constants.AlignType;
@@ -34,13 +35,18 @@ package _examples
 			for (var i:int = 0; i < 10; i++) 
 			{
 				obj = glifFactory();
+				obj.name = 'test' + i;
 				layout.addChild(obj);
 			}
 			/**
 			 * Объект layout делегирует свое поведения специальным объектам повидениям, исполняющим интерфейс IlayoutMethod
 			 * сейчас написано всего три варианта. Но они легко создаются через наследование(не обязательно) от класса LayoutMethodBase
 			 */
-			methods = [new VerticalList(), new HorizontalList(), new StringLayout()];
+			
+			 var tl:TagsLayout = new TagsLayout();
+			 tl.addMarker('test0', 100, 100);
+			 tl.addMarker('test1', { value:'test0', align:AlignType.AFTER, offset:20 }, 0);
+			methods = [new VerticalList(), new HorizontalList(), new StringLayout(), tl];
 			
 			/**
 			 * Добавление происходит через свойство method. 
@@ -56,7 +62,8 @@ package _examples
 			layout.width = 300;
 			layout.method = methods[0];
 			
-			
+			addEventListener(MouseEvent.CLICK, click);
+			return
 			
 			//* для теста - дети layouta -произвольно меняются.
 			setInterval(function():void
@@ -78,7 +85,6 @@ package _examples
 				item.dispatchEvent(new GlifEvent(GlifEvent.WIDTH_CHANGE));
 				trace(layout.width);
 			},800);//*/
-			addEventListener(MouseEvent.CLICK, click);
 		
 			
 		}

@@ -9,9 +9,14 @@ package constants
 		public static const LEFT:String = 'left';
 		public static const RIGHT:String = 'right';
 		public static const CENTER:String = 'center';
+		public static const BEFORE:String = 'before';
+		public static const AFTER:String = 'after';
+		
 		public static const TOP:String = 'top';
 		public static const MIDDLE:String = 'middle';
 		public static const BOTTOM:String = 'bottom';
+		public static const ABOVE:String = 'above';
+		public static const UNDER:String = 'under';
 		
 		public static function validate(value:String):Boolean
 		{

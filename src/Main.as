@@ -45,7 +45,7 @@ package
 		private var example:Sprite;
 		public function Main():void 
 		{ 
-			addChild(new PopupExample());
+			addChild(new ScrollerExample());
 			//example = new PopupExample();
 			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		

@@ -19,7 +19,7 @@ package scrollers
 	 */
 	public class Gallery extends Glif 
 	{
-		private var container:ScrollContainer;
+		private var container:LayoutScroller;
 		private var sb:ScrollBar;
 		private var controller:ScrollController;
 		

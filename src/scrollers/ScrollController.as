@@ -6,7 +6,7 @@ package scrollers
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	import scrollers.events.ScrollerEvent;
-	import scrollers.interfaces.IpageSnapper;
+	import scrollers.interfaces.IpageScroller;
 	import scrollers.interfaces.Iscroller;
 	import scrollers.propsObjects.ScrollProperties;
 	import simpleController.events.ControllerEvent;
@@ -18,7 +18,7 @@ package scrollers
 	{
 		//такая форма позовляет не делать публичным свойство и при этом использовать tweenMax
 		private var _position:Object = { value:0 };//0-1
-		private var _snapHandler:IpageSnapper;
+		private var _snapHandler:IpageScroller;
 		private var _props:ScrollProperties;
 		private var singleEvent:ScrollerEvent;
 		private var currentTween:TweenMax;
@@ -123,7 +123,7 @@ package scrollers
 		}
 		private function implementSnap(onComplete:Function):void
 		{
-			_scrollTo(snapHandler.getNearestPagePosition(), props.snapDuration, onComplete, false);
+			_scrollTo(snapHandler.getPagePosition(_snapHandler.currentPage), props.snapDuration, onComplete, false);
 		}
 		public function get position():Number 
 		{
@@ -134,12 +134,12 @@ package scrollers
 			_scrollTo(value, props.scrollDuration, null, props.snapDuration);
 		}
 		
-		public function get snapHandler():IpageSnapper 
+		public function get snapHandler():IpageScroller 
 		{
 			return _snapHandler;
 		}
 		
-		public function set snapHandler(value:IpageSnapper):void 
+		public function set snapHandler(value:IpageScroller):void 
 		{
 			_snapHandler = value;
 		}

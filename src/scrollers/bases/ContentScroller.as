@@ -2,28 +2,26 @@ package scrollers.bases
 {
 	import constants.Direction;
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
-	import layouts.glifs.GlifEvent;
-	import layouts.glifs.Layout;
 	import scrollers.events.ScrollerEvent;
-	import scrollers.interfaces.IpageSnapper;
 	import simpleController.Controller;
 	import simpleController.events.ControllerEvent;
+	
 	/**
-	 * Этот scrollerView обеспечивает прокрутку содержимого внутри окна с маской. Чем больше offset тем выше "уезжает" контент.
-	 * в качестве конента жестко задан layout, однако к нему есть публичный доступ позволяющий добавлять/удалять елементы, менять свойства и методы расположения.
-	 * Кроме того есть два публичных метода обеспечивающих исполнение интерфейсов IpageSnapper. 
-	 * (тоесть методы определяющиее ближайший offset|postion) соотвествующий расположению елемента внутри layout-a
+	 * ...
 	 * @author 
 	 */
-	public class ScrollContainer extends ScrollViewBase implements IpageSnapper
+	public class ContentScroller extends ScrollViewBase 
 	{
+		
 		private var dragController:Controller;
 		private var tapController:Controller;
 		private var bg:Sprite;
-		public function ScrollContainer() 
+		private var container:DisplayObjectContainer;
+		public function ContentScroller(content:DisplayObject) 
 		{
-			super(new Layout());
+			super(content);
 			
 			/**
 			 * Этот контрлер позволяет перетаскивать содержимое с помощью мыши или тача.
@@ -39,76 +37,19 @@ package scrollers.bases
 			dragController.addEventListener(ControllerEvent.SWIPE, onSwipe);
 			
 			updateMethod();
-			layout.addEventListener(GlifEvent.SIZE_CHANGE, layout_sizeChange);
-		}
-		
-		private function layout_sizeChange(e:GlifEvent):void 
-		{
-			//updateMethod();
-			dispatchEvent(new ScrollerEvent(ScrollerEvent.PROPRION_CHANGE, 0, proportion, 0, this));
 		}
 		
 		
-		/* INTERFACE scrollers.interfaces.IpageSnaper */
-		
-		public function getNearestPagePosition():Number 
-		{
-			return getNearestPageOffset() / maxOffset;
-		}
-		
-		public function getNearestPageOffset():int 
-		{
-			var item:DisplayObject;
-			var dist:int;
-			var min:int = -1;
-			var res:int;
-			for (var i:int = 0; i < layout.numChildren; i++) 
-			{
-				item = layout.getChildAt(i);
-				trace('snap', item, item.x, item.y);
-				if (isVertical) dist = Math.abs(offset - (item.y/*+item.height/2*/));
-				else dist = Math.abs(offset - (item.x+item.width/2));
-				if (min == -1 ||(min > 0 && dist <= min)) 
-				{
-					min = dist;
-					if (isVertical) res = props.offsetBegin + props.offsetY +item.y;
-					else res = props.offsetBegin + props.offsetX + item.x;
-				}
-			}
-			return res;
-		}
 		//PUBLIC:
-		override public function addChild(child:DisplayObject):DisplayObject 
-		{
-			return layout.addChild(child);
-		}
-		override public function addChildAt(child:DisplayObject, index:int):DisplayObject 
-		{
-			return layout.addChildAt(child, index);
-		}
-		override public function removeChild(child:DisplayObject):DisplayObject 
-		{
-			return layout.removeChild(child);
-		}
-		override public function removeChildAt(index:int):DisplayObject 
-		{
-			return layout.removeChildAt(index);
-		}
-		override public function removeChildren(beginIndex:int = 0, endIndex:int = 2147483647):void 
-		{
-			layout.removeChildren(beginIndex, endIndex);
-		}
-		
 		
 		override public function get width():Number 
 		{
+			
 			return super.width;
 		}
 		
 		override public function set width(value:Number):void 
 		{
-			//if (isVertical)
-			//layout.width = value;
 			super.width = value;
 		}
 		override public function get height():Number 
@@ -118,8 +59,6 @@ package scrollers.bases
 		
 		override public function set height(value:Number):void 
 		{
-			//if (!isVertical)
-			//layout.height = value;
 			super.height = value;
 		}
 		override public function get draggable():Boolean 
@@ -132,10 +71,7 @@ package scrollers.bases
 			dragController.enable = value;
 			
 		}
-		public function get layout():Layout
-		{
-			return content as Layout;
-		}
+		
 		//EVENTS:
 		private function onSwipe(e:ControllerEvent):void 
 		{
@@ -203,13 +139,13 @@ package scrollers.bases
 		{
 			if (isVertical)
 			{
-				layout.x = props.offsetX;
-				layout.width = width - props.offsetX * 2;
+				content.x = props.offsetX;
+				content.width = width - props.offsetX * 2;
 			}
 			else
 			{
-				layout.y = props.offsetY;
-				layout.height = height - props.offsetY * 2;
+				content.y = props.offsetY;
+				content.height = height - props.offsetY * 2;
 			}
 			_offset = _offset;
 			updateBg();

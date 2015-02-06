@@ -1,5 +1,7 @@
 package _examples 
 {
+	import scrollers.ScrollBar;
+	import scrollers.LayoutScroller;
 	import constants.AlignType;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -9,8 +11,6 @@ package _examples
 	import layouts.methods.HorizontalList;
 	import layouts.methods.StringLayout;
 	import layouts.methods.VerticalList;
-	import scrollers.bases.ScrollBar;
-	import scrollers.bases.ScrollContainer;
 	import scrollers.bases.ScrollViewBase;
 	import scrollers.ScrollController;
 	
@@ -20,7 +20,7 @@ package _examples
 	 */
 	public class ScrollerExample extends Sprite 
 	{
-		private var scrollBox:ScrollContainer;
+		private var scrollBox:LayoutScroller;
 		private var sb:ScrollBar;
 		private var controller:ScrollController;
 		private var index:int = 0;
@@ -29,7 +29,7 @@ package _examples
 			super();
 			//Создаем скроллер, скроллбар и контроллер для них:
 			controller = new ScrollController();
-			scrollBox = new ScrollContainer();
+			scrollBox = new LayoutScroller();
 			sb = new ScrollBar();
 			
 			//нарисуем фон для скроллбара(indicator создается по-умолчанию, но можно добавить свой аналогичным образом):

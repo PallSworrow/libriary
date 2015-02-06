@@ -1,4 +1,4 @@
-package scrollers.bases 
+package scrollers 
 {
 	import constants.AlignType;
 	import constants.Direction;
@@ -7,6 +7,7 @@ package scrollers.bases
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.security.SignerTrustSettings;
+	import scrollers.bases.ScrollViewBase;
 	import scrollers.events.ScrollerEvent;
 	import scrollers.interfaces.Iscroller;
 	import scrollers.propsObjects.ScrollerViewProperies;

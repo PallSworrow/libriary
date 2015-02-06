@@ -71,6 +71,7 @@ package scrollers.bases
 		{
 			super.removeChild(element);
 		}
+		//заблокировать все операции с chlid-ами
 		override public function addChild(child:DisplayObject):DisplayObject 
 		{
 			throw new Error('this object does not support adding chlidren');
@@ -81,7 +82,43 @@ package scrollers.bases
 			throw new Error('this object does not support adding chlidren');
 			return null;
 		}
-		
+		override public function removeChild(child:DisplayObject):DisplayObject 
+		{
+			throw new Error('this object does not support removing chlidren');
+			return null;
+		}
+		override public function removeChildAt(index:int):DisplayObject 
+		{
+			throw new Error('this object does not support removing chlidren');
+			return null;
+		}
+		override public function removeChildren(beginIndex:int = 0, endIndex:int = 2147483647):void 
+		{
+			throw new Error('this object does not support removing chlidren');
+		}
+		override public function swapChildren(child1:DisplayObject, child2:DisplayObject):void 
+		{
+			throw new Error('this object does not support swapping chlidren');
+		}
+		override public function swapChildrenAt(index1:int, index2:int):void 
+		{
+			throw new Error('this object does not support swapping chlidren');
+		}
+		override public function getChildAt(index:int):DisplayObject 
+		{
+			throw new Error('this object does not support getting chlidren');
+			return null;
+		}
+		override public function getChildByName(name:String):DisplayObject 
+		{
+			throw new Error('this object does not support getting chlidren');
+			return null;
+		}
+		override public function getChildIndex(child:DisplayObject):int 
+		{
+			throw new Error('this object does not support getting chlidren');
+			return -1;
+		}
 		
 		
 		

@@ -67,6 +67,9 @@ package popupManager.behaviors
 			
 			switch(alignX)
 			{
+				case AlignType.BEFORE:
+					x = box.x-glif.width;
+					break;
 				case AlignType.LEFT:
 					x = box.x;
 					break;
@@ -74,11 +77,17 @@ package popupManager.behaviors
 					x = box.x + (box.width - glif.width) / 2;
 					break;
 				case AlignType.RIGHT:
+					x = box.x + box.width-glif.width;
+					break;
+				case AlignType.AFTER:
 					x = box.x + box.width;
 					break;
 			}
 			switch(alignY)
 			{
+				case AlignType.ABOVE:
+					y = box.y-glif.height;
+					break;
 				case AlignType.TOP:
 					y = box.y;
 					break;
@@ -86,6 +95,9 @@ package popupManager.behaviors
 					y = box.y + (box.height - glif.height) / 2;
 					break;
 				case AlignType.BOTTOM:
+					y = box.y + box.height - glif.height;
+					break;
+				case AlignType.UNDER:
 					y = box.y + box.height;
 					break;
 			}

@@ -36,6 +36,8 @@ package constants
 			(  value == LEFT
 			|| value == RIGHT
 			|| value == CENTER
+			|| value == AFTER
+			|| value == BEFORE
 			);
 			return res;
 		}
@@ -45,6 +47,8 @@ package constants
 			(  value == TOP
 			|| value == MIDDLE
 			|| value == BOTTOM
+			|| value == ABOVE
+			|| value == UNDER
 			);
 			return res;
 		}

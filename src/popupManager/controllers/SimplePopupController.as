@@ -7,6 +7,7 @@ package popupManager.controllers
 	import popupManager.interfaces.IpopupController;
 	import popupManager.Popup;
 	import popupManager.PopupEvent;
+	import simpleTools.getStage;
 	/**
 	 * ...
 	 * @author 
@@ -62,8 +63,7 @@ package popupManager.controllers
 			listenersDelay = setTimeout(function():void
 			{
 				listenersDelay = null;
-				item.currentStage.stage.x+=10;
-				item.currentStage.stage.addEventListener(MouseEvent.CLICK, stage_click);
+				getStage(item.currentStage.stage).addEventListener(MouseEvent.CLICK, stage_click);
 				item.source.addEventListener(MouseEvent.CLICK, source_click);
 			},100);
 		}
@@ -72,7 +72,7 @@ package popupManager.controllers
 			if (listenersDelay) clearTimeout(listenersDelay);
 			else
 			{
-				item.currentStage.stage.removeEventListener(MouseEvent.CLICK, stage_click);
+				getStage(item.currentStage.stage).removeEventListener(MouseEvent.CLICK, stage_click);
 				item.source.removeEventListener(MouseEvent.CLICK, source_click);
 			}
 		}

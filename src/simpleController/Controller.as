@@ -10,12 +10,14 @@ package simpleController
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	import simpleController.events.ControllerEvent;
+	import simpleTools.getStage;
 	/**
 	 * ...
 	 * @author 
 	 */
 	public class Controller extends EventDispatcher
 	{
+		private static var globalStage:Stage;
 		
 		private var _item:InteractiveObject
 		private var _enable:Boolean = true;
@@ -91,10 +93,11 @@ package simpleController
 					dispatchCE(ControllerEvent.GESSTURER_ABORTED, gess);
 				}
 				gesstures = new Dictionary;
-				item.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
-				item.stage.removeEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
-				item.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
-				item.stage.removeEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
+			globalStage.removeEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
+			globalStage.removeEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
+			
+			globalStage.removeEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
+			globalStage.removeEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
 			}
 			//removelisteners
 			//dispatch aborts
@@ -119,11 +122,11 @@ package simpleController
 			item.removeEventListener(MouseEvent.MOUSE_DOWN, onGesstureStart)
 			item.removeEventListener(TouchEvent.TOUCH_BEGIN, onGesstureStart);
 			
-			item.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
-			item.stage.removeEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
+			globalStage.removeEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
+			globalStage.removeEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
 			
-			item.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
-			item.stage.removeEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
+			globalStage.removeEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
+			globalStage.removeEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
 		}
 		
 		
@@ -138,6 +141,10 @@ package simpleController
 		private var touchGessCount:int = 0;//mouse gess count always = 0/1)
 		protected function onGesstureStart(e:Object):Gess
 		{
+			if (!globalStage)
+			{
+				globalStage = getStage(item);
+			}
 			var gess:Gess;
 			var id:String;
 			var X:int = e.stageX;
@@ -145,16 +152,16 @@ package simpleController
 			if (e is MouseEvent)
 			{
 				id = 'mouse';
-				item.stage.addEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
-				item.stage.addEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
+				globalStage.addEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
+				globalStage.addEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
 			}
 			else if (e is TouchEvent)
 			{
 				id = 'touch' + e.touchPointID;
 				if(touchGessCount <= 0)
 				{
-					item.stage.addEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
-					item.stage.addEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
+					globalStage.addEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
+					globalStage.addEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
 				}
 				touchGessCount ++;
 			}
@@ -207,8 +214,8 @@ package simpleController
 			if (e is MouseEvent)
 			{
 				id = 'mouse';
-				item.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
-				item.stage.removeEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
+				globalStage.removeEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
+				globalStage.removeEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
 			}
 			else if (e is TouchEvent)
 			{
@@ -216,8 +223,8 @@ package simpleController
 				touchGessCount --;
 				if(touchGessCount <= 0)
 				{
-					item.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
-					item.stage.removeEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
+					globalStage.removeEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
+					globalStage.removeEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
 				}
 			}
 			else throw new Error('invalid gess complete event: ' + e);

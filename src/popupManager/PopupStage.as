@@ -94,7 +94,10 @@ package popupManager
 			if (fog && list.length==0)
 			{
 				if(foggingDuration ==0)
-				stage.removeChild(fog);
+				{
+					stage.removeChild(fog);
+					fog = null;
+				}
 				else 
 				TweenMax.to(fog, foggingDuration, 
 				{
@@ -102,6 +105,7 @@ package popupManager
 					onComplete:function():void
 					{
 						stage.removeChild(fog);
+						fog = null;
 					} 
 				} );
 			}

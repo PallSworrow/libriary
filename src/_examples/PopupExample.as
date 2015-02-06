@@ -1,12 +1,17 @@
 package _examples 
 {
+	import constants.AlignType;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import popupManager.behaviors.PopupBehavior_aliginer;
 	import popupManager.controllers.SimplePopupController;
 	import popupManager.Popup;
 	import popupManager.PopupEngine;
 	import popupManager.PopupStage;
 	import scrollers.propsObjects.ScrollProperties;
+	import simpleController.Controller;
+	import simpleController.events.ControllerEvent;
 	
 	/**
 	 * ...
@@ -25,10 +30,18 @@ package _examples
 		private var popupContent:Sprite;
 		private var popup:Popup;
 		private var popupStage:PopupStage;
+		
 		public function PopupExample() 
 		{
 			super();
-			PopupEngine.init(100, 100, this);
+			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+			
+		}
+		
+		private function addedToStage(e:Event):void 
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
+			PopupEngine.init(stage.stageWidth, stage.stageHeight, this);
 			
 			content = new Sprite();
 			popupLayer = new Sprite();
@@ -49,9 +62,16 @@ package _examples
 			popup = new Popup(popupContent,'test');
 						
 			popup.currentController = new SimplePopupController(content);
+			popup.currentBehavior = new PopupBehavior_aliginer( { alignX:AlignType.CENTER } );
 			
+			var ctrl:Controller = new Controller();
+			ctrl.addEventListener(ControllerEvent.GESSTURE_UPDATE, ctrl_gesstureUpdate);
+			ctrl.item = popupContent;
+		}
 		
-			
+		private function ctrl_gesstureUpdate(e:ControllerEvent):void 
+		{
+			trace('move');
 		}
 		
 	}

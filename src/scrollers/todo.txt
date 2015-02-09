@@ -1,0 +1,3 @@
+ - massive dispatching custom events(ScrollController) causes memory leak.  - 
+ probable solution:
+	 dispatch only native event, and add a getter of "currentScroll" object({from,to,duration,trigger})

@@ -34,9 +34,9 @@ package scrollers.bases
 			 * И тольк когда drag жест будет завершен выполняется вызов snap(), предварительно проверив, требуется ли он контроллеру.
 			 */
 			dragController = new Controller(this);
-			dragController.addEventListener(ControllerEvent.GESSTURE_UPDATE, onDragg);
-			dragController.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onDraggComplete);
-			dragController.addEventListener(ControllerEvent.SWIPE, onSwipe);
+			dragController.addEventListener(ControllerEvent.GESSTURE_UPDATE, onDragg,false,0,true);
+			dragController.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onDraggComplete,false,0,true);
+			dragController.addEventListener(ControllerEvent.SWIPE, onSwipe,false,0,true);
 			
 			updateMethod();
 		}

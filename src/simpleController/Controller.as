@@ -110,10 +110,10 @@ package simpleController
 			//trace(this, 'START LISTENING');
 			gesstures = new Dictionary();
 			if (inputMode == InputMode.MOUSE)
-				item.addEventListener(MouseEvent.MOUSE_DOWN, onGesstureStart)
+				item.addEventListener(MouseEvent.MOUSE_DOWN, onGesstureStart,false,0,true)
 				
 			else
-				item.addEventListener(TouchEvent.TOUCH_BEGIN, onGesstureStart);
+				item.addEventListener(TouchEvent.TOUCH_BEGIN, onGesstureStart,false,0,true);
 		}
 		
 		protected function stopListening():void
@@ -152,7 +152,7 @@ package simpleController
 			if (e is MouseEvent)
 			{
 				id = 'mouse';
-				globalStage.addEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
+				globalStage.addEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate,false,0,true);
 				globalStage.addEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
 			}
 			else if (e is TouchEvent)
@@ -160,8 +160,8 @@ package simpleController
 				id = 'touch' + e.touchPointID;
 				if(touchGessCount <= 0)
 				{
-					globalStage.addEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
-					globalStage.addEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
+					globalStage.addEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate,false,0,true);
+					globalStage.addEventListener(TouchEvent.TOUCH_END, onGesstureComplete,false,0,true);
 				}
 				touchGessCount ++;
 			}

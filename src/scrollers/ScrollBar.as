@@ -42,12 +42,12 @@ package scrollers
 			super(indicatorView);
 			//Здесь использовано два контролера - один для перетаскивания индикаторы(контент), а другой для взимодейсвтия с фоном.
 			dragController = new Controller();
-			dragController.addEventListener(ControllerEvent.GESSTURE_UPDATE, onDragg);
-			dragController.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onDraggComplete);
+			dragController.addEventListener(ControllerEvent.GESSTURE_UPDATE, onDragg,false,0,true);
+			dragController.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onDraggComplete,false,0,true);
 			
 			tapController = new Controller(this);
-			tapController.addEventListener(ControllerEvent.TAP, onTap);
-			tapController.addEventListener(ControllerEvent.SWIPE, onSwipe);
+			tapController.addEventListener(ControllerEvent.TAP, onTap,false,0,true);
+			tapController.addEventListener(ControllerEvent.SWIPE, onSwipe,false,0,true);
 			
 			masked = false;
 			
@@ -287,7 +287,7 @@ package scrollers
 		{
 			if(_proptionController) _proptionController.removeEventListener(ScrollerEvent.PROPRION_CHANGE, proptionController_proprionChange);
 			_proptionController = value;
-			if(_proptionController) _proptionController.addEventListener(ScrollerEvent.PROPRION_CHANGE, proptionController_proprionChange);
+			if(_proptionController) _proptionController.addEventListener(ScrollerEvent.PROPRION_CHANGE, proptionController_proprionChange,false,0,true);
 		}
 		
 		private function proptionController_proprionChange(e:ScrollerEvent):void 

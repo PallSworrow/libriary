@@ -30,7 +30,7 @@ package scrollers
 			super(new Layout());
 			pagesLoader = new ScrollerMemoryControll(this);
 			updateMethod();
-			layout.addEventListener(GlifEvent.SIZE_CHANGE, layout_sizeChange);
+			layout.addEventListener(GlifEvent.SIZE_CHANGE, layout_sizeChange,false,0,true);
 		}
 		override public function get controller():ScrollController 
 		{
@@ -43,7 +43,7 @@ package scrollers
 			controller.removeEventListener(ScrollerEvent.SCROLL_COMPLETE, controller_scrollComplete);
 			super.controller = value;
 			if(controller) 
-			controller.addEventListener(ScrollerEvent.SCROLL_COMPLETE, controller_scrollComplete);
+			controller.addEventListener(ScrollerEvent.SCROLL_COMPLETE, controller_scrollComplete,false,0,true);
 		}
 		private function controller_scrollComplete(e:ScrollerEvent):void 
 		{

@@ -57,7 +57,7 @@ package _examples
 			
 			//Связываем елементы контроллером
 			//sb.controller = controller;
-			//scrollBox.controller = controller;
+			scrollBox.controller = controller;
 			//sb.proptionController = scrollBox;
 			
 			

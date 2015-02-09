@@ -179,7 +179,7 @@ package scrollers.bases
 		{
 			if (_controller) _controller.removeEventListener(ScrollerEvent.SCROLL_START, onControllerStartScroll);
 			_controller = value;
-			if (_controller) _controller.addEventListener(ScrollerEvent.SCROLL_START, onControllerStartScroll);
+			if (_controller) _controller.addEventListener(ScrollerEvent.SCROLL_START, onControllerStartScroll,false,0,true);
 		}
 		
 		public function get draggable():Boolean 

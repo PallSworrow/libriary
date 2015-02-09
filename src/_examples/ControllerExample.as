@@ -1,7 +1,10 @@
 package _examples 
 {
+	import com.greensock.TweenMax;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.text.TextField;
+	import scrollers.events.ScrollerEvent;
 	import simpleController.Controller;
 	import simpleController.events.ControllerEvent;
 	
@@ -28,15 +31,16 @@ package _examples
 			addChild(trigger);
 			
 			controller = new Controller(trigger);
-			controller.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onControllerEvent);
+			//controller.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onControllerEvent);
+			controller.addEventListener(ControllerEvent.GESSTURE_UPDATE, onControllerEvent);
 			controller.addEventListener(ControllerEvent.TAP,onTap)
 			controller.addEventListener(ControllerEvent.SWIPE,onSwipe)
 			
 		}
-		
+		var tween;
 		private function onControllerEvent(e:ControllerEvent):void
 		{
-			trace('--- controller event  -----')
+			/*trace('--- controller event  -----')
 			trace('type:',e.type);
 			trace('gessture distance:',e.gessture.distance);
 			trace('gessture distanceX:',e.gessture.distanceX);
@@ -44,7 +48,13 @@ package _examples
 			trace('gessture length:',e.gessture.trackLength);
 			trace('gessture duration:',e.gessture.duration);
 			trace('gessture direction:',e.gessture.vectorDirection);
-			trace('======================= \n');
+			trace('======================= \n');*/
+			var X = trigger.x + e.gessture.lastStepX;
+			var Y = trigger.y +e.gessture.lastStepY;
+			if (tween)
+			tween.kill();
+			tween = TweenMax.to(trigger, 0.4, { x:X, y:Y } );
+			
 		}
 		private function onTap(e:ControllerEvent):void
 		{

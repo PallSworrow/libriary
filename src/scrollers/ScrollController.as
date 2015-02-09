@@ -22,6 +22,7 @@ package scrollers
 		private var _props:ScrollProperties;
 		private var singleEvent:ScrollerEvent;
 		private var currentTween:TweenMax;
+		private var _completeDispatcher:uint;
 		public function ScrollController() 
 		{
 			super(this);
@@ -31,7 +32,7 @@ package scrollers
 		//PRIVATE:
 		private function _scrollTo(pos:Number, duration:Number, onComplete:Function = null, snapToPage:Boolean = true,trigger:Object = 'external'):void
 		{
-			
+			completeDispatcher = null;
 			if (currentTween)//Если контроллер выполняет прокуртку - остановить.
 			{
 				currentTween.kill();
@@ -45,18 +46,21 @@ package scrollers
 			{
 				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, pos,0,trigger));
 				_position.value = pos;
-				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, 0, trigger));
+				//dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, 0, trigger));
+				completeDispatcher = setTimeout(dispatchComplete,200,new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, 0, trigger));
 				
 				if(snapToPage)
 				snap(onComplete);
-				else  if (onComplete)
+				else  if(onComplete)
 				{
 					onComplete();
 				}
 			}
 			else 
 			{
-				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, pos,duration,trigger));
+				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, pos, duration, trigger));
+				
+			trace(this, 'TWEENMAX');
 				currentTween = TweenMax.to(_position, duration, { value:pos, onUpdate:onScroll, onComplete:onScrollComplete } );
 			}
 			
@@ -67,7 +71,8 @@ package scrollers
 			function onScrollComplete():void
 			{
 				//прокрутка закончена, snap считается отдельной прокруткой и у него будут собственные start|complete события
-				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, duration,trigger));
+				//dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, duration,trigger));
+				completeDispatcher = setTimeout(dispatchComplete,100,new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, 0, trigger));
 				if(snapToPage)
 				snap(onComplete);
 				else  if (onComplete)
@@ -76,7 +81,10 @@ package scrollers
 				}
 			}
 		}
-		
+		private function dispatchComplete(e:ScrollerEvent):void
+		{
+			dispatchEvent(e);
+		}
 		//Оставшийся с поисков решения способ отложить выполнение snap. подумал оставить и сделать настраиваемым. можно удалить
 		private var _snapDelay:uint;
 		protected function get snapDelay():uint 
@@ -118,7 +126,8 @@ package scrollers
 			}
 			else
 			{
-				snapDelay = setTimeout(implementSnap, 100, onComplete);
+				//snapDelay = setTimeout(implementSnap, 100, onComplete);
+				implementSnap(onComplete);
 			}
 		}
 		private function implementSnap(onComplete:Function):void
@@ -152,6 +161,17 @@ package scrollers
 		public function set props(value:ScrollProperties):void 
 		{
 			_props = value;
+		}
+		
+		public function get completeDispatcher():uint 
+		{
+			return _completeDispatcher;
+		}
+		
+		public function set completeDispatcher(value:uint):void 
+		{
+			if (_completeDispatcher) clearTimeout(_completeDispatcher);
+			_completeDispatcher = value;
 		}
 		
 		

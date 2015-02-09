@@ -55,6 +55,10 @@ package scrollers.bases
 			masked = true;//можно выключать, например и scrollBar это свойство по-умолчанию равно false
 			
 		}
+		public function update():void
+		{
+			offset = offset;
+		}
 		/**
 		 * Этот метод позволяет добавить объект на сцену елмента вобход публичного addChild(который запрещен инкапсуляции ради) 
 		 * @param	element
@@ -263,8 +267,8 @@ package scrollers.bases
 		 */
 		protected function onControllerStartScroll(e:ScrollerEvent):void
 		{
-			//trace(this, e.type, e.from, e.to, e.duration);
 			if (_position == e.to) return;
+			trace(this, e.type, e.from, e.to, e.duration);
 			currentTween = null;
 			var from:Number = _position;
 			var to:Number = e.to;
@@ -278,6 +282,7 @@ package scrollers.bases
 				return;
 			}
 			var anim:Object = { position:from };
+			trace(this, 'TWEENMAX');
 			currentTween = TweenMax.to(anim, duration, { position:to,
 			onUpdate:function():void
 			{

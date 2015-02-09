@@ -35,6 +35,7 @@ package
 	import simpleController.events.ControllerEvent;
 	import simpleController.events.MultitouchEvent;
 	import simpleController.MultitouchController;
+	import simpleTools.FPScounter;
 	
 	
 	/**
@@ -47,7 +48,8 @@ package
 		public function Main():void 
 		{ 
 			//addChild(new ButtonExample());
-			addChild(new PopupExample());
+			addChild(new ScrollerExample());
+			addChild(new FPScounter());
 			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		
 		}

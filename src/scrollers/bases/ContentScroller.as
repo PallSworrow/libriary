@@ -4,6 +4,7 @@ package scrollers.bases
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
+	import flash.system.System;
 	import scrollers.events.ScrollerEvent;
 	import simpleController.Controller;
 	import simpleController.events.ControllerEvent;
@@ -19,6 +20,7 @@ package scrollers.bases
 		private var tapController:Controller;
 		private var bg:Sprite;
 		private var container:DisplayObjectContainer;
+		
 		public function ContentScroller(content:DisplayObject) 
 		{
 			super(content);
@@ -99,6 +101,7 @@ package scrollers.bases
 			res = offset - e.gessture.lastStepY;
 			else
 			res = offset - e.gessture.lastStepX;
+			
 			if (controller) controller.scrollTo(res / maxOffset, 0, null, this, true);
 			else 
 			offset = res;
@@ -111,7 +114,6 @@ package scrollers.bases
 				controller.snap();
 			}
 		}
-		
 		//PRIVATE:
 		private function updateBg():void
 		{
@@ -160,6 +162,7 @@ package scrollers.bases
 		
 		override protected function set _offset(value:int):void 
 		{
+			//return
 			if (value > maxOffset) value = maxOffset;
 			if (value < 0) value = 0;
 			

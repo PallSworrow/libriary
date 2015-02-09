@@ -20,18 +20,23 @@ package scrollers
 		}
 		public function update():void
 		{
+			var curr:int = targ.currentPage;
 			var item:Ipage;
-			for (var i:int = targ.numChildren; i>=0 ; i--) 
+			for (var i:int = targ.numChildren-1; i>=0 ; i--) 
 			{
 				item = targ.getChildAt(i) as Ipage;
 				if (item)
 				{
-					if (i<targ.currentPage-loadBefore || i>targ.currentPage+loadAfter)
+					trace(i,item);
+					if (i>=curr-loadBefore && i<=curr+loadAfter)
 					{
 						if (!item.isLoaded)
 						item.load();
-						if (i == targ.currentPage && !item.isEnabled)
-						item.enable()
+						if (i == curr)
+						{
+							if(!item.isEnabled)
+							item.enable()
+						}
 						else if (item.isEnabled)
 						item.disable();
 					}

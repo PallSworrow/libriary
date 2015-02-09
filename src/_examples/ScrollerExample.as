@@ -1,5 +1,7 @@
 package _examples 
 {
+	import scrollers.bases.TestPage;
+	import scrollers.events.ScrollerEvent;
 	import scrollers.ScrollBar;
 	import scrollers.LayoutScroller;
 	import constants.AlignType;
@@ -43,27 +45,27 @@ package _examples
 			scrollBox.width = 400;
 			scrollBox.height = 500;
 			
-			sb.width = 50;
-			sb.height = 400;
+			//sb.width = 50;
+			//sb.height = 400;
 			
-			sb.x = scrollBox.width;
+			//sb.x = scrollBox.width;
 			//добавляем на сцену:
 			addChild(scrollBox);
-			addChild(sb);
+			//addChild(sb);
 			
 		
 			
 			//Связываем елементы контроллером
-			sb.controller = controller;
-			scrollBox.controller = controller;
-			sb.proptionController = scrollBox;
+			//sb.controller = controller;
+			//scrollBox.controller = controller;
+			//sb.proptionController = scrollBox;
 			
 			
 			//добавляем layout-у способ расположения и изменяем его настройки(обновление при изменениях настроек пока неафтоматическое)
 			scrollBox.layout.method = new VerticalList();
 			scrollBox.layout.method.properties.alignX = AlignType.CENTER;
+			scrollBox.props.offsetY = 200;
 			scrollBox.layout.method.update();
-			
 			
 			//просто графика чтобы были видны границы скроллера
 			graphics.lineStyle(1, 0x000000);
@@ -73,29 +75,49 @@ package _examples
 			controller.snapHandler = scrollBox;
 			
 			var obj:DisplayObject;
-			for (var i:int = 0; i < 4; i++) 
+			for (var i:int = 0; i < 10; i++) 
 			{
 				obj = glifFactory();
 				scrollBox.layout.addChild(obj);
 			}
 			scrollBox.layout.update();
+			scrollBox.update();
 			addEventListener(MouseEvent.CLICK, click);
+			
+			//scrollBox.enabePagesControll(3, 3);
+			//линия гду установлен offsetY. для наглядности работы загрузчика
+			graphics.lineStyle(1);
+			graphics.moveTo(0, 200);
+			graphics.lineTo(300, 200);
+			//toTheBottom();
 		}
+		private function toTheTop():void
+		{
+			scrollBox.scrollTo(0, 1, toTheBottom);
+		}
+		
+		private function toTheBottom():void 
+		{
+			scrollBox.scrollTo(1, 1, toTheTop);
+		}
+		
 		
 		private function click(e:MouseEvent):void 
 		{
-			scrollBox.layout.addChild(glifFactory());
-			scrollBox.layout.update();
+			
+			trace(this, scrollBox.props.offsetY);
+			//scrollBox.layout.addChild(glifFactory());
+			//scrollBox.layout.update();
 		}
 		
 		
 			
 		private function glifFactory():Sprite
 		{
-			var res:Sprite = new Sprite();
+			var res:Sprite = new TestPage();/*
 			res.graphics.beginFill(Math.random() * 0xdddddd,0.6);
-			res.graphics.drawRect(0, 0, /*int(Math.random() * 60) + */100, /*int(Math.random() * 60) +*/ 100);
-			res.graphics.endFill();
+			res.graphics.drawRect(0, 0, int(Math.random() * 60) + 100, int(Math.random() * 60) + 100);
+			res.graphics.endFill();*/
 			return res;
 			
 		}

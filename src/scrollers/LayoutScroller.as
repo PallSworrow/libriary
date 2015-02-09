@@ -22,27 +22,45 @@ package scrollers
 	{
 		//private var dragController:Controller;
 		//private var tapController:Controller;
+		private var pagesLoader:ScrollerMemoryControll;
+		private var pageControllEnabled:Boolean = false;
 		public function LayoutScroller() 
 		{
+			props
 			super(new Layout());
-			
-			/**
-			 * Этот контрлер позволяет перетаскивать содержимое с помощью мыши или тача.
-			 * для прокрутки контроллера используется вызов метода scrollTo
-			 * Если у контроллерер предполагает привязку к страницам(snapToPage), 
-			 * то, чтобы избежать постоянных вызовов snap(), в параметры передается флаг,
-			 * который блочит привязку для текущей прокрутки. 
-			 * И тольк когда drag жест будет завершен выполняется вызов snap(), предварительно проверив, требуется ли он контроллеру.
-			 */
-			/*dragController = new Controller(this);
-			dragController.addEventListener(ControllerEvent.GESSTURE_UPDATE, onDragg);
-			dragController.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onDraggComplete);
-			dragController.addEventListener(ControllerEvent.SWIPE, onSwipe);
-			*/
+			pagesLoader = new ScrollerMemoryControll(this);
 			updateMethod();
 			layout.addEventListener(GlifEvent.SIZE_CHANGE, layout_sizeChange);
 		}
+		override public function get controller():ScrollController 
+		{
+			return super.controller;
+		}
 		
+		override public function set controller(value:ScrollController):void 
+		{
+			if(controller) 
+			controller.removeEventListener(ScrollerEvent.SCROLL_COMPLETE, controller_scrollComplete);
+			super.controller = value;
+			if(controller) 
+			controller.addEventListener(ScrollerEvent.SCROLL_COMPLETE, controller_scrollComplete);
+		}
+		private function controller_scrollComplete(e:ScrollerEvent):void 
+		{
+			if(pageControllEnabled)
+			pagesLoader.update();
+		}
+		public function enabePagesControll(loadBeforCurrent:int, loadAfterCurrent:int):void 
+		{
+			pagesLoader.loadBefore = loadBeforCurrent;
+			pagesLoader.loadAfter = loadAfterCurrent;
+			pageControllEnabled = true;
+		}
+		
+		public function disablePagesControll():void 
+		{
+			pageControllEnabled = false;
+		}
 		private function layout_sizeChange(e:GlifEvent):void 
 		{
 			//updateMethod();
@@ -59,8 +77,9 @@ package scrollers
 		
 		public function getPageOffset(pageIndex:int):int 
 		{
-			if (isVertical) return props.offsetBegin + props.offsetY + getChildAt(pageIndex).y;
-			else  return props.offsetBegin + props.offsetX + getChildAt(pageIndex).x;
+			if (isVertical) return /*props.offsetBegin + props.offsetY + */getChildAt(pageIndex).y;
+			//if (isVertical) return  getChildAt(pageIndex).y-(props.offsetBegin + props.offsetY);
+			else  return /*props.offsetBegin + props.offsetX + */getChildAt(pageIndex).x;
 		}
 		
 		public function scrollToPage(pageIndex:int, duration:Number = 0, onComplete:Function = null):void 
@@ -74,9 +93,9 @@ package scrollers
 			var dist:int;
 			var min:int = -1;
 			var res:int;
+			
 			for (var i:int = 0; i < layout.numChildren; i++) 
 			{
-				
 				dist = Math.abs(offset - getPageOffset(i));
 				if (min == -1 ||(min > 0 && dist <= min)) 
 				{
@@ -122,6 +141,10 @@ package scrollers
 		{
 			return layout.getChildAt(index);
 		}
+		
+		/* INTERFACE scrollers.interfaces.IpageScroller */
+		
+	
 		
 		
 		public function get layout():Layout

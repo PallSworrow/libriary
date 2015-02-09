@@ -9,7 +9,6 @@ package scrollers.interfaces
 	public interface IpageScroller 
 	{
 		//add/remove items
-		//заблокировать все операции с chlid-ами
 		function addChild(child:DisplayObject):DisplayObject 
 		function addChildAt(child:DisplayObject, index:int):DisplayObject 
 		function removeChild(child:DisplayObject):DisplayObject 
@@ -27,7 +26,8 @@ package scrollers.interfaces
 		function scrollToPage(pageIndex:int,duration:Number=0,onComplete:Function=null):void
 		function get currentPage():int
 		//memory controll
-		
+		function enabePagesControll(loadBeforCurrent:int, loadAfterCurrent:int):void
+		function disablePagesControll():void
 	}
 	
 }

@@ -142,11 +142,17 @@ package layouts.glifs
 		}
 		override public function removeChildren(beginIndex:int = 0, endIndex:int = 2147483647):void 
 		{
+			if (endIndex > numChildren) endIndex = numChildren;
+			if (beginIndex < 0) beginIndex = 0;
+			var item:DisplayObject;
 			for (var i:int = endIndex-1; i >=beginIndex ; i--) 
 			{
-				dettachGlif(getChildAt(i));
+				item = getChildAt(i);
+				dettachGlif(item);
+				removeChild(item);
 			}
-			super.removeChildren(beginIndex, endIndex);
+			//trace(beginIndex, endIndex,numChildren);
+			//super.removeChildren(beginIndex, endIndex);
 			callMethod(beginIndex);
 		}
 		

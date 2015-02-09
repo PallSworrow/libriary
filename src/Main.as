@@ -1,5 +1,6 @@
 package 
 {
+	import _examples.ButtonExample;
 	import _examples.ControllerExample;
 	import _examples.PopupExample;
 	import _examples.ScrollerExample;
@@ -45,7 +46,7 @@ package
 		private var example:Sprite;
 		public function Main():void 
 		{ 
-			addChild(new ScrollerExample());
+			addChild(new ButtonExample());
 			//example = new PopupExample();
 			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		

@@ -17,10 +17,17 @@ package layouts.methods
 	{
 		
 		private var markers:Dictionary;//{x:{value:number|displayObjet|String, align:AlignType, offset:number},
-		public function TagsLayout() 
+		public function TagsLayout(addMarkers:Array=null) 
 		{
 			super();
 			markers = new Dictionary();
+			if (!addMarkers) return;
+			var mk:Object
+			for (var i:int = 0; i < addMarkers; i++) 
+			{
+				mk = addMarkers[i];
+				addMarker(mk.name, mk.x, mk.y);
+			}
 		}
 		public function addMarker(name:String, x:Object, y:Object):void
 		{

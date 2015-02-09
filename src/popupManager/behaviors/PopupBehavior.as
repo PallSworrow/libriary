@@ -13,7 +13,7 @@ package popupManager.behaviors
 	 * ...
 	 * @author 
 	 */
-	public class PopupBehavior_aliginer extends PopupBehaviorBase
+	public class PopupBehavior extends PopupBehaviorBase
 	{
 		//params:
 		private var enterFrame:Boolean = false;
@@ -24,11 +24,10 @@ package popupManager.behaviors
 		
 		private var iterator:Shape;
 		
-		private var _anchor:Object;
-		public function PopupBehavior_aliginer(params:Object=null,anchor:Object = null) 
+		private var anchor:Object;
+		public function PopupBehavior(params:Object=null) 
 		{
 			if (params) parseParams(params);
-			_anchor = anchor;
 		}
 		override public function init(popup:Popup):void 
 		{
@@ -131,25 +130,18 @@ package popupManager.behaviors
 		
 		
 		
-		public function get anchor():Object 
-		{
-			return _anchor;
-		}
+	
 		
-		public function set anchor(value:Object):void 
-		{
-			_anchor = value;
-			if (isActive)
-			update();
-		}
-		
-		private function parseParams(params:Object):void
+		public function parseParams(params:Object):void
 		{
 			if (params.enterFrame is Boolean) enterFrame = Boolean(params.enterFrame);
 			if (AlignType.validateHorizontal(params.alignX)) alignX = params.alignX;
 			if (AlignType.validateVertical(params.alignY)) alignY = params.alignY;
 			if (params.offsetX is Number) offsetX = params.offsetX;
 			if (params.offsetY is Number) offsetY = params.offsetY;
+			if (params.anchor) anchor = params.anchor;
+			if (isActive)
+			update();
 		}
 		
 		

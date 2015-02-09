@@ -22,7 +22,7 @@ package popupManager.controllers
 		private var _trigger:InteractiveObject;
 		private var popupflow:String;
 		
-		public function SimplePopupController(triggerObject:InteractiveObject) 
+		public function SimplePopupController(triggerObject:InteractiveObject=null) 
 		{
 			trigger = triggerObject;
 			

@@ -46,8 +46,8 @@ package
 		private var example:Sprite;
 		public function Main():void 
 		{ 
-			addChild(new ButtonExample());
-			//example = new PopupExample();
+			//addChild(new ButtonExample());
+			addChild(new PopupExample());
 			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		
 		}

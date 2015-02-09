@@ -6,6 +6,7 @@ package popupManager
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
+	import popupManager.behaviors.PopupBehavior;
 	import popupManager.interfaces.*;
 	import requestFlow.*;
 	/**
@@ -29,10 +30,12 @@ package popupManager
 		
 		private var stage:PopupStage;
 		private var _currentController:IpopupController;
-		private var _currentBehavior:IpopupBehavior;
+		private var currentBehavior:PopupBehavior;
 		//private var stage:Stage
 		public function Popup(source:DisplayObject, stageSelector:Object=null,addToFlow:String = null) 
 		{
+			currentBehavior = new PopupBehavior();
+			currentBehavior.init(this);
 			if(!PopupEngine.inited) throw new Error("Popup engine hasn't been inited yet");
 			id = count; count++;
 			
@@ -115,13 +118,16 @@ package popupManager
 			_currentController = value;
 			if (_currentController) _currentController.init(this);
 		}
-		
+		public function behavior(parmas:Object = null):void
+		{
+			currentBehavior.parseParams(parmas);
+		}
 		/*public function get currentBehavior():IpopupBehavior 
 		{
 			return _currentBehavior;
 		}*/
 		
-		public function set currentBehavior(value:IpopupBehavior):void 
+		/*public function set currentBehavior(value:IpopupBehavior):void 
 		{
 			if (_currentBehavior) _currentBehavior.dispose();
 			
@@ -129,7 +135,7 @@ package popupManager
 			if (_currentBehavior)_currentBehavior.init(this);
 		}
 		
-		
+		*/
 		
 		
 		//INNER:

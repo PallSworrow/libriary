@@ -4,7 +4,7 @@ package _examples
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import popupManager.behaviors.PopupBehavior_aliginer;
+	import popupManager.behaviors.PopupBehavior;
 	import popupManager.controllers.SimplePopupController;
 	import popupManager.Popup;
 	import popupManager.PopupEngine;
@@ -62,7 +62,7 @@ package _examples
 			popup = new Popup(popupContent,'test');
 						
 			popup.currentController = new SimplePopupController(content);
-			popup.currentBehavior = new PopupBehavior_aliginer( { alignX:AlignType.CENTER } );
+			popup.behavior( { alignX:AlignType.CENTER, anchor:'mouse', enterFrame:true, aligY:AlignType.UNDER,offsetY:10 } );
 			
 			var ctrl:Controller = new Controller();
 			ctrl.addEventListener(ControllerEvent.GESSTURE_UPDATE, ctrl_gesstureUpdate);

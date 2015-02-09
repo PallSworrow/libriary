@@ -54,6 +54,7 @@ package simpleButton
 		public function set method(value:IsingleButtonBehavior):void 
 		{
 			_method = value;
+			if(_method)
 			_method.init(current);
 		}
 		

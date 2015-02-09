@@ -46,8 +46,10 @@ package _examples
 			sprite.alpha = 0;
 			res.setHandler(handler, 'helloWorld');
 			//btn.behavior = new SwitcherBehavior();
+			res.onPressEnabled = true;
 			res.setViewHandler(BtnPhaze.DEFAULT, updateView);
 			res.setViewHandler(BtnPhaze.ACTIVE, updateView);
+			res.setViewHandler(BtnPhaze.PRESSED, updateView);
 			res.addHandledChild(sprite, 'highlight');
 			return res
 		}
@@ -61,6 +63,9 @@ package _examples
 					break;
 				case BtnPhaze.DEFAULT:
 					elements.highlight.alpha = 0;
+					break;
+				case BtnPhaze.PRESSED:
+					elements.highlight.alpha = 0.5;
 					break;
 			}
 		}

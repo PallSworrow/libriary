@@ -4,6 +4,7 @@ package simpleButton
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
 	import simpleButton.interfaces.Ibtn;
 	import simpleButton.interfaces.IbuttonController;
@@ -23,6 +24,7 @@ package simpleButton
 		private var viewHandlers:Dictionary;
 		private var ctrl:Controller;
 		private var _phaze:String = BtnPhaze.DEFAULT;
+		private var _onPressEnabled:Boolean = false;
 		public function Button() 
 		{
 			super();
@@ -82,12 +84,12 @@ package simpleButton
 			{
 				_group.tap(this);
 			}
-			else
+			else 
 			{
 				controller.tap();
 			}
 		}
-		public function _activate():void
+		private function _activate():void
 		{
 			trace(this, 'activate', _phaze,phaze == BtnPhaze.DEFAULT);
 			_isActive = true;
@@ -99,7 +101,7 @@ package simpleButton
 			//handler
 			callHandler();
 		}
-		public function _desactivate():void
+		private function _desactivate():void
 		{
 			_isActive = false;
 			//phaze
@@ -116,6 +118,38 @@ package simpleButton
 		{
 			return _phaze;
 		}
+		
+		public function get onPressEnabled():Boolean 
+		{
+			return _onPressEnabled;
+		}
+		
+		public function set onPressEnabled(value:Boolean):void 
+		{
+			if (_onPressEnabled == value) return;
+			_onPressEnabled = value;
+			if (value)
+			{
+				ctrl.addEventListener(ControllerEvent.GESSTURE_START, ctrl_gesstureStart);
+			}
+			else
+			{
+				ctrl.removeEventListener(ControllerEvent.GESSTURE_START, ctrl_gesstureStart);
+			}
+		}
+		
+		private function ctrl_gesstureStart(e:ControllerEvent):void 
+		{
+			ctrl.addEventListener(ControllerEvent.GESSTURE_COMPLETE, ctrl_gesstureComplete);
+			setPhaze(BtnPhaze.PRESSED);
+		}
+		
+		private function ctrl_gesstureComplete(e:ControllerEvent):void 
+		{
+			if (isActive) setPhaze(BtnPhaze.ACTIVE);
+			else setPhaze(BtnPhaze.DEFAULT);
+		}
+		
 		
 	
 		////PRIVATE:
@@ -142,6 +176,7 @@ package simpleButton
 			}
 			
 		}
+		
 		private var currentHandler:Function;
 		private var handlerParams:Object;
 		private function callHandler():void

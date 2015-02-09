@@ -56,6 +56,7 @@ package simpleButton
 		public function removeBtn(selector:Object):void 
 		{
 			var btn:Ibtn = getBtn(selector);
+			if(btn)
 			btn.group = null;
 			
 		}
@@ -92,8 +93,13 @@ package simpleButton
 		public function tap(selector:Object):void 
 		{
 			var btn:int = getIndex(selector);
-			if(btn>=0)
-			method.tap(btn, list);
+			if (btn >= 0)
+			{
+				if(method)
+				method.tap(btn, list);
+				else 
+				(list[btn].ctrl as IbuttonController).togleActivate();
+			}
 		}
 		
 		public function clear():void 

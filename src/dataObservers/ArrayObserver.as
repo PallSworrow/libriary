@@ -101,6 +101,14 @@ package dataObservers {
 			dispatchAOE(ArrayObserverEvent.UPDATE,_currentValue,_prevValue);
 			updateSubListeners();
 		}
+		public function setItem(value:Object, index:int):void
+		{
+			_prevValue = currentValue;
+			var prevItem:Object = _currentValue[index];
+			_currentValue[index] = value;
+			dispatchAOE(ArrayObserverEvent.UPDATE,[value],[prevItem]);
+			
+		}
 		public function push(item:Object):void
 		{
 			//trace(this, 'push:', item);

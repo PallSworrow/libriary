@@ -1,0 +1,3 @@
+- progressbar and volumebar are _scroller implementations
+- player is IscrollController implementation
+- player gets links to views with interfaces.

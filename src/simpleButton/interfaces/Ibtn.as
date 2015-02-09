@@ -9,12 +9,15 @@ package simpleButton.interfaces
 	 */
 	public interface Ibtn extends IEventDispatcher
 	{
+		function get phaze():String 
 		function get behavior():IsingleButtonBehavior
 		function get group():String
 		function set group(value:String):void
 		function set behavior(value:IsingleButtonBehavior):void
 		function get name():String
 		function tap(e:Event = null):void
+		function activate():void
+		function desactivate():void
 		function get isActive():Boolean
 		
 	}

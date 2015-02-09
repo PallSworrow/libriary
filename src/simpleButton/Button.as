@@ -6,6 +6,7 @@ package simpleButton
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
+	import simpleButton.events.BtnEvent;
 	import simpleButton.interfaces.Ibtn;
 	import simpleButton.interfaces.IbuttonController;
 	import simpleButton.interfaces.IsingleButtonBehavior;
@@ -88,7 +89,19 @@ package simpleButton
 			{
 				controller.tap();
 			}
+			dispatchEvent(new BtnEvent(BtnEvent.TAP));
 		}
+		public function activate():void 
+		{
+			if (!isActive) tap();
+		}
+		
+		public function desactivate():void 
+		{
+			if (isActive) tap();
+		}
+		
+	
 		private function _activate():void
 		{
 			trace(this, 'activate', _phaze,phaze == BtnPhaze.DEFAULT);
@@ -99,11 +112,13 @@ package simpleButton
 				setPhaze(BtnPhaze.ACTIVE);
 			}
 			//handler
+			dispatchEvent(new BtnEvent(BtnEvent.ACTIVATED));
 			callHandler();
 		}
 		private function _desactivate():void
 		{
 			_isActive = false;
+			dispatchEvent(new BtnEvent(BtnEvent.DEACTIVATED));
 			//phaze
 			if (phaze == BtnPhaze.ACTIVE)
 			setPhaze(BtnPhaze.DEFAULT);
@@ -174,6 +189,7 @@ package simpleButton
 						break;
 				}
 			}
+			dispatchEvent(new BtnEvent(BtnEvent.PHAZE_CHANGED));
 			
 		}
 		

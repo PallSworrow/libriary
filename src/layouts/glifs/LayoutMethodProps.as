@@ -22,8 +22,8 @@ package layouts.glifs
 		public var maxLineHeight:int=-1;
 		public var maxColumnWidth:int=-1;
 		public var overrideSizeGetters:Boolean = false;
-		public var forceSize:Boolean=false;
-		public var forceSizeIgnoreNonGlifs:Boolean = false;
+		public var forceSize:Boolean=true;
+		public var forceSizeIgnoreNonGlifs:Boolean = true;
 		
 		
 		//tweenMax:

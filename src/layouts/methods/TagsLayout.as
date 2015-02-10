@@ -23,7 +23,7 @@ package layouts.methods
 			markers = new Dictionary();
 			if (!addMarkers) return;
 			var mk:Object
-			for (var i:int = 0; i < addMarkers; i++) 
+			for (var i:int = 0; i < addMarkers.length; i++) 
 			{
 				mk = addMarkers[i];
 				addMarker(mk.name, mk.x, mk.y);

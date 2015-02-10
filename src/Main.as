@@ -6,7 +6,7 @@ package
 	import _examples.ScrollerExample;
 	import antares.BasicFunctional;
 	import constants.AlignType;
-	import _examples.LayoutUsageExample;
+	import _examples.LayoutExample;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.utils.Dictionary;
@@ -48,7 +48,10 @@ package
 		public function Main():void 
 		{ 
 			//addChild(new ButtonExample());
-			addChild(new ScrollerExample());
+			//addChild(new ScrollerExample());
+			addChild(new LayoutExample());
+			
+			
 			addChild(new FPScounter());
 			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		

@@ -83,7 +83,7 @@ package layouts.methods
 				
 			}
 		}
-		private function getLayoutWidth():int
+		private function getLayoutHeight():int
 		{
 			if (!currentLayout) throw new Error("call method's submethod  bedor init");
 			var item:DisplayObject = currentLayout.getChildAt(currentLayout.numChildren -1);
@@ -92,10 +92,10 @@ package layouts.methods
 			if (properties.minLineHeight > 0 && h < properties.minLineHeight) h = properties.minLineHeight;
 			return item.y + h;
 		}
-		override public function get widthGetter():Function 
+		override public function get heightGetter():Function 
 		{
 			if (properties.overrideSizeGetters)
-			return getLayoutWidth;
+			return getLayoutHeight;
 			else
 			return null;
 		}

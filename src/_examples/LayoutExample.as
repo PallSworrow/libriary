@@ -4,6 +4,7 @@ package _examples
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.utils.setInterval;
+	import layouts.methods.ColumnsLayout;
 	import layouts.methods.StringLayout;
 	import layouts.methods.TagsLayout;
 	
@@ -20,12 +21,12 @@ package _examples
 	 * ...
 	 * @author 
 	 */
-	public class LayoutUsageExample extends Sprite 
+	public class LayoutExample extends Sprite 
 	{
 		private var layout:Layout;
 		private var methods:Array;
 		private var index:int = 0;
-		public function LayoutUsageExample() 
+		public function LayoutExample() 
 		{
 			super();
 			layout = new Layout();
@@ -43,10 +44,13 @@ package _examples
 			 * сейчас написано всего три варианта. Но они легко создаются через наследование(не обязательно) от класса LayoutMethodBase
 			 */
 			
-			 var tl:TagsLayout = new TagsLayout();
-			 tl.addMarker('test0', 100, 100);
-			 tl.addMarker('test1', { value:'test0', align:AlignType.AFTER, offset:20 }, 0);
-			methods = [new VerticalList(), new HorizontalList(), new StringLayout(), tl];
+			 var tagsLayout:TagsLayout = new TagsLayout();
+			 tagsLayout.addMarker('test0', 100, 100);
+			 tagsLayout.addMarker('test1', { value:'test0', align:AlignType.AFTER, offset:20 }, 0);
+			 
+			 var columnsLayout:ColumnsLayout = new ColumnsLayout();
+			 columnsLayout.layoutMarkers = ['20%', 20, { paddingLeft:10, width:30, paddingRight:10 }, null, { paddingLeft:'10%', width:'10%', paddingRight:'10%' } ];
+			methods = [new VerticalList(), new HorizontalList(), new StringLayout(), tagsLayout,columnsLayout];
 			
 			/**
 			 * Добавление происходит через свойство method. 
@@ -96,7 +100,7 @@ package _examples
 			params.intervalY = 10;
 			params.alignX = AlignType.RIGHT;
 			params.parseParams('{"minLineHeight":"100"}');
-			
+			params.parseParams({forceSizeIgnoreNonGlifs:false});
 			index++;
 			if (index == methods.length) index = 0;
 			layout.method = methods[index];

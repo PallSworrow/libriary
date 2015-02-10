@@ -9,7 +9,9 @@ package mediaPlayers.audio
 	import flash.media.SoundTransform;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
+	import scrollers.interfaces.IscrollController;
 	import scrollers.interfaces.Iscroller;
+	import scrollers.propsObjects.ScrollProperties;
 	import simpleButton.BtnPhaze;
 	import simpleButton.Button;
 	import simpleButton.events.BtnEvent;
@@ -19,7 +21,7 @@ package mediaPlayers.audio
 	 * ...
 	 * @author 
 	 */
-	public class SimpleAudioPlayer extends Sprite 
+	public class SimpleAudioPlayer extends Sprite implements IscrollController
 	{
 		private var _playPauseBtn:Ibtn;
 		private var _progressBar:Iscroller;
@@ -116,6 +118,38 @@ package mediaPlayers.audio
 		{
 			
 		}
+		
+		/* INTERFACE scrollers.interfaces.IscrollController */
+		
+		public function scrollTo(pos:Number, duration:Object = 0, onComplete:Function = null, trigger:Object = 'external', noSnap:Boolean = false):void 
+		{
+			position = pod;
+		}
+		
+		public function get position():Number 
+		{
+			return _position;
+		}
+		
+		public function set position(value:Number):void 
+		{
+			_position = value;
+		}
+		
+		public function get props():ScrollProperties 
+		{
+			return _props;
+		}
+		
+		public function set props(value:ScrollProperties):void 
+		{
+			_props = value;
+		}
+		
+		public function snap(onComplete:Function = null):void 
+		{
+			
+		}
 		//private:
 		private function _play():void
 		{
@@ -166,9 +200,6 @@ package mediaPlayers.audio
 			else
 			return _isPlaying;
 		}
-		
-		
-		
 		
 	}
 

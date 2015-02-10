@@ -9,6 +9,7 @@ package scrollers
 	import scrollers.bases.ContentScroller;
 	import scrollers.events.ScrollerEvent;
 	import scrollers.interfaces.IpageScroller;
+	import scrollers.interfaces.IscrollController;
 	import simpleController.Controller;
 	import simpleController.events.ControllerEvent;
 	/**
@@ -32,12 +33,12 @@ package scrollers
 			updateMethod();
 			layout.addEventListener(GlifEvent.SIZE_CHANGE, layout_sizeChange,false,0,true);
 		}
-		override public function get controller():ScrollController 
+		override public function get controller():IscrollController 
 		{
 			return super.controller;
 		}
 		
-		override public function set controller(value:ScrollController):void 
+		override public function set controller(value:IscrollController):void 
 		{
 			if(controller) 
 			controller.removeEventListener(ScrollerEvent.SCROLL_COMPLETE, controller_scrollComplete);

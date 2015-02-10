@@ -13,8 +13,8 @@ package scrollers.interfaces
 		function get position():Number 
 		function set position(value:Number):void 
 		
-		function set controller(value:ScrollController):void 
-		function get controller():ScrollController 
+		function set controller(value:IscrollController):void 
+		function get controller():IscrollController 
 		
 		function get draggable():Boolean 
 		function set draggable(value:Boolean):void 
@@ -26,8 +26,8 @@ package scrollers.interfaces
 		function get maxOffset():int 
 		function get proportion():Number 
 			
-		function get props():ScrollerViewProperies 
-		function set props(value:ScrollerViewProperies):void 
+		//function get props():ScrollerViewProperies 
+		//function set props(value:ScrollerViewProperies):void 
 		
 		function scrollTo(position:Number, duration:Number, onComplete:Function = null):void
 		

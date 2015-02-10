@@ -7,6 +7,7 @@ package scrollers.bases
 	import layouts.glifs.Layout;
 	import layouts.GlifType;
 	import scrollers.events.ScrollerEvent;
+	import scrollers.interfaces.IscrollController;
 	import scrollers.interfaces.Iscroller;
 	import scrollers.propsObjects.ScrollerViewProperies;
 	import scrollers.ScrollController;
@@ -33,7 +34,7 @@ package scrollers.bases
 		//определяет плоскость прокрутки
 		private var _isVertical:Boolean = true;
 		//ссылка на контроллер
-		private var _controller:ScrollController;
+		private var _controller:IscrollController;
 		//разрешить перетаскивание мышью/пальцем
 		private var _draggable:Boolean = true;
 		//свойства, обращаясь к которым скроллер определяет как ему отображать/прокручивать содержимое
@@ -175,7 +176,7 @@ package scrollers.bases
 			_position = value;
 		}
 		
-		public function set controller(value:ScrollController):void 
+		public function set controller(value:IscrollController):void 
 		{
 			if (_controller) _controller.removeEventListener(ScrollerEvent.SCROLL_START, onControllerStartScroll);
 			_controller = value;
@@ -192,7 +193,7 @@ package scrollers.bases
 			_draggable = value;
 			
 		}
-		public function get controller():ScrollController 
+		public function get controller():IscrollController 
 		{
 			return _controller;
 		}

@@ -48,8 +48,8 @@ package
 		public function Main():void 
 		{ 
 			//addChild(new ButtonExample());
-			//addChild(new ScrollerExample());
-			addChild(new LayoutExample());
+			addChild(new ScrollerExample());
+			//addChild(new LayoutExample());
 			
 			
 			addChild(new FPScounter());

@@ -7,6 +7,7 @@ package scrollers
 	import flash.utils.setTimeout;
 	import scrollers.events.ScrollerEvent;
 	import scrollers.interfaces.IpageScroller;
+	import scrollers.interfaces.IscrollController;
 	import scrollers.interfaces.Iscroller;
 	import scrollers.propsObjects.ScrollProperties;
 	import simpleController.events.ControllerEvent;
@@ -14,7 +15,7 @@ package scrollers
 	 * ...
 	 * @author 
 	 */
-	public class ScrollController extends EventDispatcher
+	public class ScrollController extends EventDispatcher implements IscrollController
 	{
 		//такая форма позовляет не делать публичным свойство и при этом использовать tweenMax
 		private var _position:Object = { value:0 };//0-1
@@ -163,12 +164,12 @@ package scrollers
 			_props = value;
 		}
 		
-		public function get completeDispatcher():uint 
+		protected function get completeDispatcher():uint 
 		{
 			return _completeDispatcher;
 		}
 		
-		public function set completeDispatcher(value:uint):void 
+		protected function set completeDispatcher(value:uint):void 
 		{
 			if (_completeDispatcher) clearTimeout(_completeDispatcher);
 			_completeDispatcher = value;

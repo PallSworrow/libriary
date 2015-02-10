@@ -39,6 +39,7 @@ package layouts.glifs
 		//PUBLIC:
 		public function dispatchSizeChange():void
 		{
+			if (glifType == GlifType.NONE) return;
 			if (glifType == GlifType.HORIZONTAL || glifType == GlifType.STATIC) dispatchEvent(new GlifEvent(GlifEvent.WIDTH_CHANGE));
 			if (glifType == GlifType.VERTICAL || glifType == GlifType.STATIC) dispatchEvent(new GlifEvent(GlifEvent.HEIGHT_CHANGE));
 			if (glifType != GlifType.DYNAMIC)
@@ -46,6 +47,11 @@ package layouts.glifs
 		}
 		override public function set width(value:Number):void 
 		{
+			if (glifType == GlifType.NONE)
+			{
+				super.width = value;
+				return;
+			}
 			if(glifType ==  GlifType.VERTICAL || glifType == GlifType.DYNAMIC)
 			{
 				_width = value;
@@ -55,6 +61,11 @@ package layouts.glifs
 		}
 		override public function set height(value:Number):void 
 		{
+			if (glifType == GlifType.NONE)
+			{
+				super.height = value;
+				return;
+			}
 			if(glifType ==  GlifType.HORIZONTAL ||  glifType == GlifType.DYNAMIC)
 			{
 				_height = value;

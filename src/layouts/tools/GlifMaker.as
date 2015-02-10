@@ -1,19 +1,19 @@
 package layouts.tools 
 {
-	import layouts.glifs.Glif;
-	import layouts.glifs.Layout;
-	import layouts.glifs.LayoutMethodProps;
+	import flash.display.DisplayObject;
+	import flash.utils.Dictionary;
+	import layouts.glifs.*;
+	import layouts.interfaces.IglifFactory;
 	import layouts.interfaces.IlayoutMethod;
-	import layouts.methods.HorizontalList;
-	import layouts.methods.StringLayout;
-	import layouts.methods.TagsLayout;
-	import layouts.methods.VerticalList;
-	import simpleTools.TypeDescriptor;
+	import layouts.methods.*;
+	import layouts.tools.factories.CustomButtonFactory;
+	import simpleButton.Button;
+	import simpleButton.interfaces.IsingleButtonBehavior;
 	/**
 	 * ...
 	 * @author 
 	 */
-	public class GlifMaker 
+	public class GlifMaker implements IglifFactory
 	{
 		//lists:
 		public static const CUSTOM_LAYOUT:String = 'custom_layout';
@@ -32,16 +32,45 @@ package layouts.tools
 		 */
 		public function GlifMaker() 
 		{
-			
+			factories = new Dictionary();
 		}
-		public function createGlif(data:Object):Glif
+		private var factories:Dictionary;
+		//customise:
+		public function addFactory(name:String, factory:Function):void
 		{
+			if (name == CUSTOM_LAYOUT
+			|| name == VERTICAL_LAYOUT
+			|| name == STRING_LAYOUT
+			|| name == HORIZONTAL_LAYOUT
+			|| name == TAGGED_LAYOUT
+			|| name == GLIF
+			|| name == BUTTON)
+			throw new Error("It's mposible to use this factory name");
+			if (factory.length > 1)
+			throw new Error('factory can have no more than one parameter');
+			
+			factories[name] = factory;
+		}
+		public function removeFactory(name:String):void
+		{
+			delete factories[name];
+		}
+		/* INTERFACE layouts.interfaces.IglifFactory */
+		
+		public function createDisplayObject(data:Object = null):DisplayObject 
+		{
+			return createGlif(data);
+		}
+		public function createGlif(data:Object = null ):Glif
+		{
+			if(!data)
+			return new Glif();
 			if (data is Array)
 			{
 				data = { type:VERTICAL_LAYOUT, list:data };
 			}
 			var res:Glif;
-			var layout:Layout;
+			var factory:Function;
 			switch(data.type)
 			{
 				case CUSTOM_LAYOUT:
@@ -60,8 +89,30 @@ package layouts.tools
 				case TAGGED_LAYOUT:
 					res = createLayout(new TagsLayout(data.markers as Array), data.list as Array, data.params);
 					break;
+				case BUTTON:
+					if (!data.provider) throw new Error('BUTTON glif data must have not-null "provider" parameter: '+data.provider);
+					res = createBtn(data.provider, data.handler as Function,data.handlerParams, data.group as String, data.behavior as IsingleButtonBehavior);
+					break;
+				case GLIF:
+					res = createGlif(data);
+					break;
 				default:
 					//check for custom factories
+					factory = factories[data.type];
+					if (factory is Function)
+					{
+						switch(factory.length)
+						{
+							case 0:
+								res = factory();
+								break;
+							case 1:
+								res = factory(data);
+								break;
+						}
+					}
+					else
+					throw new Error('there is no factory with name: ' + data.type);
 					break
 			}
 			return res;
@@ -90,13 +141,27 @@ package layouts.tools
 			res.update();
 			return res;
 		}
-		protected function createBtn():void
+		protected function createBtn(provider:Object, handler:Function, handlerParams:Object,group:String, behavior:IsingleButtonBehavior):Glif
 		{
-			
+			return CustomButtonFactory.createBtn(provider, group, behavior, handler, handlerParams);
 		}
-		protected function createGlif():void
+		protected function createGlif(data:Object):Glif
 		{
-			
+			var res:Glif;
+			if (data is Glif)
+			{
+				res = data as Glif;
+			}
+			else if (data is DisplayObject)
+			{
+				res = new Glif();
+				res.addChild(data as DisplayObject);
+			}
+			else
+			{
+				throw new Error('GLIF must be a Glif or a DisplayObject instance');
+			}
+			return res;
 		}
 	}
 

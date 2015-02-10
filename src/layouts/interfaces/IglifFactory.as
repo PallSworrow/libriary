@@ -7,9 +7,9 @@ package layouts.interfaces
 	 * ...
 	 * @author 
 	 */
-	public interface IglifFactory 
+	public interface IglifFactory extends IviewFactory
 	{
-		function createGlif(params:Object=null):Glif
+		function createGlif(data:Object=null):Glif
 		
 	}
 	

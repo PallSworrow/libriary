@@ -6,6 +6,8 @@ package simpleButton
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
+	import layouts.glifs.CustomGlif;
+	import layouts.GlifType;
 	import simpleButton.events.BtnEvent;
 	import simpleButton.interfaces.Ibtn;
 	import simpleButton.interfaces.IbuttonController;
@@ -17,7 +19,7 @@ package simpleButton
 	 * ...
 	 * @author 
 	 */
-	public class Button extends Sprite implements Ibtn
+	public class Button extends CustomGlif implements Ibtn
 	{
 		private var _group:BtnGroup;
 		private var controller:IbuttonController;
@@ -28,7 +30,7 @@ package simpleButton
 		private var _onPressEnabled:Boolean = false;
 		public function Button() 
 		{
-			super();
+			super(GlifType.NONE);//для совместимости с glifMaker
 			ctrl = new Controller(this);
 			ctrl.addEventListener(ControllerEvent.TAP, tap);
 			controller = new ButtonController(this, _activate, _desactivate);
@@ -171,7 +173,6 @@ package simpleButton
 		private var viewelements:Dictionary;
 		private function setPhaze(value:String):void
 		{
-			trace(this, 'st phaze', value);
 			_phaze = value;
 			var handler:Function = viewHandlers[value];
 			if (handler)

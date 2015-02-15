@@ -45,27 +45,27 @@ package _examples
 			scrollBox.width = 400;
 			scrollBox.height = 500;
 			
-			//sb.width = 50;
-			//sb.height = 400;
+			sb.width = 50;
+			sb.height = 400;
 			
-			//sb.x = scrollBox.width;
+			sb.x = scrollBox.width;
 			//добавляем на сцену:
 			addChild(scrollBox);
-			//addChild(sb);
+			addChild(sb);
 			
 		
 			
 			//Связываем елементы контроллером
-			//sb.controller = controller;
+			sb.controller = controller;
 			scrollBox.controller = controller;
-			//sb.proptionController = scrollBox;
+			sb.proptionController = scrollBox;
 			
 			
 			//добавляем layout-у способ расположения и изменяем его настройки(обновление при изменениях настроек пока неафтоматическое)
 			scrollBox.layout.method = new VerticalList();
 			scrollBox.layout.method.properties.alignX = AlignType.CENTER;
 			scrollBox.props.offsetY = 200;
-			scrollBox.layout.method.update();
+			scrollBox.update();
 			
 			//просто графика чтобы были видны границы скроллера
 			graphics.lineStyle(1, 0x000000);
@@ -81,7 +81,7 @@ package _examples
 				scrollBox.layout.addChild(obj);
 			}
 			scrollBox.layout.update();
-			scrollBox.update();
+			//scrollBox.update();
 			addEventListener(MouseEvent.CLICK, click);
 			
 			//scrollBox.enabePagesControll(3, 3);

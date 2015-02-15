@@ -2,8 +2,10 @@ package layouts.methods
 {
 	import constants.AlignType;
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import layouts.glifs.Glif;
 	import layouts.glifs.GlifEvent;
+	import layouts.glifs.Layout;
 	import layouts.glifs.LayoutMethodBase;
 	import layouts.GlifType;
 	
@@ -27,8 +29,10 @@ package layouts.methods
 		{
 			return GlifType.HORIZONTAL;
 		}
-		override public function update(from:int = 0):void 
+		override public function update(target:DisplayObjectContainer, from:int = 0):void 
 		{
+			
+			var currentLayout:DisplayObjectContainer = target;
 			//trace(this, JSON.stringify(properties));
 			//main:
 			var item:DisplayObject;
@@ -81,22 +85,7 @@ package layouts.methods
 				
 			}
 		}
-		private function getLayoutWidth():int
-		{
-			if (!currentLayout) throw new Error("call method's submethod  bedor init");
-			var item:DisplayObject = currentLayout.getChildAt(currentLayout.numChildren -1);
-			var w:int =  item.width;
-			if (properties.maxColumnWidth > 0 && w > properties.maxColumnWidth) w = properties.maxColumnWidth;
-			if (properties.minColumnWidth > 0 && w < properties.minColumnWidth) w = properties.minColumnWidth;
-			return item.x + w;
-		}
-		override public function get widthGetter():Function 
-		{
-			if (properties.overrideSizeGetters)
-			return getLayoutWidth;
-			else
-			return null;
-		}
+		
 	}
 
 }

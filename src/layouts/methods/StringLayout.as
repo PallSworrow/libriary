@@ -1,7 +1,9 @@
 package layouts.methods 
 {
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import layouts.glifs.GlifEvent;
+	import layouts.glifs.Layout;
 	import layouts.glifs.LayoutMethodBase;
 	import layouts.GlifType;
 	
@@ -25,8 +27,9 @@ package layouts.methods
 		{
 			return GlifEvent.SIZE_CHANGE;
 		}
-		override public function update(from:int = 0):void 
+		override public function update(target:DisplayObjectContainer, from:int = 0):void 
 		{
+			var currentLayout:DisplayObjectContainer = target;
 			from = 0;//always from 0 item
 			var border:int= currentLayout.width;
 			

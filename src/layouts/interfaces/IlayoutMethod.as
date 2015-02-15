@@ -1,5 +1,6 @@
 package layouts.interfaces 
 {
+	import flash.display.DisplayObjectContainer;
 	import layouts.glifs.Layout;
 	import layouts.glifs.LayoutMethodProps;
 	
@@ -14,13 +15,13 @@ package layouts.interfaces
 		 */
 		function get glifType():String
 		function get triggerEventType():String
-		function init(target:Layout):void
+		//function init(target:Layout):void
 		function dispose():void
-		function update(from:int = 0):void
+		function update(target:DisplayObjectContainer,from:int = 0):void
 		function get properties():LayoutMethodProps 
 		function set properties(value:LayoutMethodProps):void
-		function get  widthGetter():Function
-		function get  heightGetter():Function
+		function getWidth(target:DisplayObjectContainer):int
+		function getHeight(target:DisplayObjectContainer):int
 	
 		
 	}

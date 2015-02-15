@@ -3,15 +3,17 @@ package layouts.methods
 	import com.greensock.TweenMax;
 	import constants.AlignType;
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import layouts.glifs.Glif;
 	import layouts.glifs.GlifEvent;
+	import layouts.glifs.Layout;
 	import layouts.glifs.LayoutMethodBase;
 	import layouts.GlifType;
 	/**
 	 * ...
 	 * @author 
 	 */
-	public class VerticalList extends LayoutMethodBase 
+	public class VerticalList extends LayoutMethodBase
 	{
 		
 		public function VerticalList() 
@@ -27,9 +29,9 @@ package layouts.methods
 		{
 			return GlifType.VERTICAL;
 		}
-		override public function update(from:int = 0):void 
+		override public function update(target:DisplayObjectContainer, from:int = 0):void 
 		{
-			
+			var currentLayout:DisplayObjectContainer = target;
 			//main:
 			var item:DisplayObject;
 			var prev:DisplayObject;
@@ -83,7 +85,7 @@ package layouts.methods
 				
 			}
 		}
-		private function getLayoutHeight():int
+		/*private function getLayoutHeight():int
 		{
 			if (!currentLayout) throw new Error("call method's submethod  bedor init");
 			var item:DisplayObject = currentLayout.getChildAt(currentLayout.numChildren -1);
@@ -91,14 +93,8 @@ package layouts.methods
 			if (properties.maxLineHeight > 0 && h > properties.maxLineHeight) h = properties.maxLineHeight;;
 			if (properties.minLineHeight > 0 && h < properties.minLineHeight) h = properties.minLineHeight;
 			return item.y + h;
-		}
-		override public function get heightGetter():Function 
-		{
-			if (properties.overrideSizeGetters)
-			return getLayoutHeight;
-			else
-			return null;
-		}
+		}*/
+		
 	}
 
 }

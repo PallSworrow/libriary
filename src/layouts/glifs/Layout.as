@@ -4,6 +4,7 @@ package layouts.glifs
 	import flash.events.Event;
 	import layouts.GlifType;
 	import layouts.interfaces.IlayoutMethod;
+	import layouts.methods.VerticalList;
 	/**
 	 * ...
 	 * @author 
@@ -65,7 +66,7 @@ package layouts.glifs
 			if (_method)
 			{
 				listenForChildrenChange = false;
-				_method.update(from);
+				_method.update(this,from);
 				listenForChildrenChange = true;
 				dispatchSizeChange();
 			}
@@ -85,19 +86,17 @@ package layouts.glifs
 		//OVERRIDES:
 		override public function get width():Number 
 		{
-			if (_method)
+			if (_method && (glifType == GlifType.VERTICAL || glifType == GlifType.STATIC)&& _method.properties.overrideSizeGetters)
 			{
-				if (_method.widthGetter)
-				return _method.widthGetter();
+				return _method.getWidth(this);
 			}
 			return super.width;
 		}
 		override public function get height():Number 
 		{
-			if (_method)
+			if (_method && (glifType == GlifType.HORIZONTAL || glifType == GlifType.STATIC)&& _method.properties.overrideSizeGetters)
 			{
-				if (_method.heightGetter)
-				return _method.heightGetter();
+				return _method.getHeight(this);
 			}
 			return super.height;
 		}
@@ -176,8 +175,8 @@ package layouts.glifs
 			{
 				//glifType = _method.type;
 				updateMethodTrigger = _method.triggerEventType;
-				_method.init(this);
 			}
+			else throw new Error('method property must be not null');
 		}
 		
 	}

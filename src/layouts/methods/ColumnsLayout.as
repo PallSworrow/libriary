@@ -1,8 +1,10 @@
 package layouts.methods 
 {
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import layouts.glifs.Glif;
 	import layouts.glifs.GlifEvent;
+	import layouts.glifs.Layout;
 	import layouts.glifs.LayoutMethodBase;
 	import layouts.GlifType;
 	
@@ -38,8 +40,9 @@ package layouts.methods
 			if (!value) value = [];
 			_layoutMarkers = value;
 		}
-		override public function update(from:int = 0):void 
+		override public function update(target:DisplayObjectContainer, from:int = 0):void 
 		{
+			var currentLayout:DisplayObjectContainer = target;
 			
 			var offset:int=0;
 			var param:Object;
@@ -54,7 +57,7 @@ package layouts.methods
 				{
 					if (i < layoutMarkers.length)
 					{
-						param = checkParam(layoutMarkers[i]);
+						param = checkParam(layoutMarkers[i],currentLayout.width);
 						if (param.width is Number &&(child is Glif || !properties.forceSizeIgnoreNonGlifs))
 						{
 							child.width = param.width as Number;
@@ -63,7 +66,6 @@ package layouts.methods
 						if (param.paddingLeft is Number) 
 						offset += param.paddingLeft as Number;
 						
-						trace(this, 'padding Right:', param.paddingRight);
 						if (param.paddingRight is Number) 
 						padding = param.paddingRight as Number;
 					}
@@ -75,13 +77,9 @@ package layouts.methods
 				offset = child.x + child.width+padding;
 			}
 		}
-		private function get width():int
+		
+		private function checkParam(param:Object,width:int):Object
 		{
-			return currentLayout.width;
-		}
-		private function checkParam(param:Object):Object
-		{
-			trace(this, 'checkParam', JSON.stringify(param));
 			if (!param) return { };
 			
 			var aplWidth:Object;

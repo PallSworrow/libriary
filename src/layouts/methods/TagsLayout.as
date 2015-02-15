@@ -3,9 +3,11 @@ package layouts.methods
 	import _examples.ControllerExample;
 	import constants.AlignType;
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	import layouts.glifs.GlifEvent;
+	import layouts.glifs.Layout;
 	import layouts.glifs.LayoutMethodBase;
 	import layouts.GlifType;
 	
@@ -47,8 +49,9 @@ package layouts.methods
 		{
 			return GlifType.DYNAMIC;
 		}
-		override public function update(from:int = 0):void 
+		override public function update(target:DisplayObjectContainer, from:int = 0):void 
 		{
+			var currentLayout:DisplayObjectContainer = target;
 			//props defines only defaults:
 			//var defAlignX:String = properties.alignX;
 			//var defAlignY:String = properties.alignY;
@@ -65,7 +68,7 @@ package layouts.methods
 				mk = markers[item.name];
 				if (mk)
 				{
-					res = getPos(mk.x, mk.y, item);
+					res = getPos(mk.x, mk.y, item,currentLayout);
 				}
 				else res = new Point();
 				
@@ -76,8 +79,9 @@ package layouts.methods
 			
 		}
 		//RPIVATE
-		private function getPos(markerX:Object, markerY:Object,item:DisplayObject):Point
+		private function getPos(markerX:Object, markerY:Object,item:DisplayObject,target:DisplayObjectContainer):Point
 		{
+			var currentLayout:DisplayObjectContainer = target;
 			var res:Point = new Point();
 			var value:Object;//x|y value
 			var align:String;//x/y align

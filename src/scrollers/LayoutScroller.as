@@ -27,11 +27,21 @@ package scrollers
 		private var pageControllEnabled:Boolean = false;
 		public function LayoutScroller() 
 		{
-			props
 			super(new Layout());
+			content.addEventListener(GlifEvent.SIZE_CHANGE, content_sizeChange);
 			pagesLoader = new ScrollerMemoryControll(this);
 			updateMethod();
 			layout.addEventListener(GlifEvent.SIZE_CHANGE, layout_sizeChange,false,0,true);
+		}
+		
+		private function content_sizeChange(e:GlifEvent):void 
+		{
+			super.update();
+		}
+		override public function update():void 
+		{
+			layout.update();
+			super.update();
 		}
 		override public function get controller():IscrollController 
 		{

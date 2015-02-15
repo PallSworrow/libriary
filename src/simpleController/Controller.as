@@ -93,11 +93,11 @@ package simpleController
 					dispatchCE(ControllerEvent.GESSTURER_ABORTED, gess);
 				}
 				gesstures = new Dictionary;
-			globalStage.removeEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
-			globalStage.removeEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
+			globalStage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			globalStage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			
-			globalStage.removeEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
-			globalStage.removeEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
+			globalStage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			globalStage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			}
 			//removelisteners
 			//dispatch aborts
@@ -110,23 +110,23 @@ package simpleController
 			//trace(this, 'START LISTENING');
 			gesstures = new Dictionary();
 			if (inputMode == InputMode.MOUSE)
-				item.addEventListener(MouseEvent.MOUSE_DOWN, onGesstureStart,false,0,true)
+				item.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown,false,0,true)
 				
 			else
-				item.addEventListener(TouchEvent.TOUCH_BEGIN, onGesstureStart,false,0,true);
+				item.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchStart,false,0,true);
 		}
 		
 		protected function stopListening():void
 		{
 			gesstures = null;
-			item.removeEventListener(MouseEvent.MOUSE_DOWN, onGesstureStart)
-			item.removeEventListener(TouchEvent.TOUCH_BEGIN, onGesstureStart);
+			item.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown)
+			item.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchStart);
 			
-			globalStage.removeEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
-			globalStage.removeEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
+			globalStage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			globalStage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			
-			globalStage.removeEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
-			globalStage.removeEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
+			globalStage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			globalStage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 		}
 		
 		
@@ -139,34 +139,34 @@ package simpleController
 		//ENGINE:
 		private var gesstures:Dictionary;
 		private var touchGessCount:int = 0;//mouse gess count always = 0/1)
-		protected function onGesstureStart(e:Object):Gess
+		protected function onGesstureStart(X:int,Y:int,id:String):Gess
 		{
 			if (!globalStage)
 			{
 				globalStage = getStage(item);
 			}
 			var gess:Gess;
-			var id:String;
-			var X:int = e.stageX;
-			var Y:int = e.stageY;
-			if (e is MouseEvent)
+			//var id:String;
+			//var X:int = e.stageX;
+			//var Y:int = e.stageY;
+			if (id = 'mouse')
 			{
-				id = 'mouse';
-				globalStage.addEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate,false,0,true);
-				globalStage.addEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
+				//id = 'mouse';
+				globalStage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove,false,0,true);
+				globalStage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
-			else if (e is TouchEvent)
+			else
 			{
-				id = 'touch' + e.touchPointID;
+				//id = 'touch' + e.touchPointID;
 				if(touchGessCount <= 0)
 				{
-					globalStage.addEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate,false,0,true);
-					globalStage.addEventListener(TouchEvent.TOUCH_END, onGesstureComplete,false,0,true);
+					globalStage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove,false,0,true);
+					globalStage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd,false,0,true);
 				}
 				touchGessCount ++;
 			}
-			else 
-			throw new Error('invalid gess start event: ' + e);
+			//else 
+			//throw new Error('invalid gess start event: ' + e);
 			
 			if (gesstures[id])
 			throw new Error("previos " + id + " gess hasn's been complete");
@@ -181,17 +181,17 @@ package simpleController
 			return gess;
 			
 		}
-		protected function onGesstureUpdate(e:Object):Gess
+		protected function onGesstureUpdate(X:int,Y:int,id:String):Gess
 		{
 			var gess:Gess;
 			var id:String;
-			var X:int = e.stageX;
-			var Y:int = e.stageY;
-			if (e is MouseEvent)
-			id = 'mouse';
-			else if (e is TouchEvent)
-			id = 'touch' + e.touchPointID;
-			else throw new Error('invalid gess update event: ' + e);
+			//var X:int = e.stageX;
+			//var Y:int = e.stageY;
+			//if (e is MouseEvent)
+			//id = 'mouse';
+			//else if (e is TouchEvent)
+			//id = 'touch' + e.touchPointID;
+			//else throw new Error('invalid gess update event: ' + e);
 			
 			if (!gesstures[id]) 
 			throw new Error(id+" gessture hasn't been inited before update() call");
@@ -204,30 +204,30 @@ package simpleController
 			return gess;
 		
 		}
-		protected function onGesstureComplete(e:Object):Gess
+		protected function onGesstureComplete(X:int,Y:int,id:String):Gess
 		{
 			var gess:Gess;
 			var id:String;
-			var X:int = e.stageX;
-			var Y:int = e.stageY;
+			//var X:int = e.stageX;
+			//var Y:int = e.stageY;
 			var res:String;
-			if (e is MouseEvent)
+			if (id == 'mouse')
 			{
-				id = 'mouse';
-				globalStage.removeEventListener(MouseEvent.MOUSE_MOVE, onGesstureUpdate);
-				globalStage.removeEventListener(MouseEvent.MOUSE_UP, onGesstureComplete);
+				//id = 'mouse';
+				globalStage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+				globalStage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
-			else if (e is TouchEvent)
+			else //if (e is TouchEvent)
 			{
-				id = 'touch' + e.touchPointID;
+				//id = 'touch' + e.touchPointID;
 				touchGessCount --;
 				if(touchGessCount <= 0)
 				{
-					globalStage.removeEventListener(TouchEvent.TOUCH_MOVE, onGesstureUpdate);
-					globalStage.removeEventListener(TouchEvent.TOUCH_END, onGesstureComplete);
+					globalStage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+					globalStage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 				}
 			}
-			else throw new Error('invalid gess complete event: ' + e);
+			//else throw new Error('invalid gess complete event: ' + e);
 			
 			if (!gesstures[id]) 
 			throw new Error(id+" gessture hasn't been inited before complete() call");
@@ -235,7 +235,8 @@ package simpleController
 			gess = gesstures[id];
 			res = gess.complete();
 			
-			delete(gesstures[id]);
+			gesstures[id].dispose();
+			delete gesstures[id];
 			
 			if (res) dispatchCE(res, gess);//tap|swipe
 			//dispatch:
@@ -243,7 +244,13 @@ package simpleController
 			
 			return gess;
 		}
-		
+		//EVENTS:
+		private function onMouseDown(e:MouseEvent):void { onGesstureStart(e.stageX, e.stageY, 'mouse'); }
+		private function onMouseMove(e:MouseEvent):void { onGesstureUpdate(e.stageX, e.stageY, 'mouse'); }
+		private function onMouseUp(e:MouseEvent):void 	{ onGesstureComplete(e.stageX, e.stageY, 'mouse'); }
+		private function onTouchStart(e:TouchEvent):void{ onGesstureStart(e.stageX, e.stageY, 'touch'+e.touchPointID); }
+		private function onTouchMove(e:TouchEvent):void { onGesstureStart(e.stageX, e.stageY, 'touch'+e.touchPointID); }
+		private function onTouchEnd(e:TouchEvent):void  { onGesstureStart(e.stageX, e.stageY, 'touch'+e.touchPointID); }
 	}
 
 }

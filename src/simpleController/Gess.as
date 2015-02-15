@@ -42,7 +42,11 @@ package simpleController
 			date = new Date();
 			swipeTimer = setTimeout(failSwipe, props.swipeMaxDuration);
 		}
-	
+		internal function dispose():void
+		{
+			props = null;
+			date = null;
+		}
 		public function update(newX:int, newY:int):void 
 		{
 			_status = 'moving';

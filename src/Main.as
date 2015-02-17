@@ -48,7 +48,8 @@ package
 		public function Main():void 
 		{ 
 			//addChild(new ButtonExample());
-			addChild(new ScrollerExample());
+			//addChild(new ScrollerExample());
+			addChild(new ControllerExample());
 			//addChild(new LayoutExample());
 			
 			

@@ -27,25 +27,35 @@ package simpleController
 		private var props:ControllerParams;
 		private var _status:String;
 		private var _id:String;
-		public function Gess(x:int, y:int, id:String, params:ControllerParams) 
+		public function Gess(params:ControllerParams) 
+		{
+			startPoint = new Point();
+			currPoint = new Point();
+			lastStep = new Point();
+			props = params;
+		}
+		internal function dispose():void
+		{
+			_status = 'disposed';
+			date = null;
+			clearTimeout(swipeTimer);
+		}
+		public function init(x:int, y:int, id:String):void
 		{
 			_id = id;
 			_status = 'inited';
-			props = params;
 //			trace(this);
-			startPoint = new Point(x, y);
-			currPoint = new Point(x, y);
-			lastStep = new Point();
+			startPoint.x = x;
+			startPoint.y = y;
+			currPoint.x = x;
+			currPoint.y = y;
+			lastStep.x = 0;
+			lastStep.y = 0;
 			length = 0;
 			swipeFailed = false;
 			tapFailed = false;
 			date = new Date();
 			swipeTimer = setTimeout(failSwipe, props.swipeMaxDuration);
-		}
-		internal function dispose():void
-		{
-			props = null;
-			date = null;
 		}
 		public function update(newX:int, newY:int):void 
 		{
@@ -73,21 +83,24 @@ package simpleController
 			return null;
 		}
 		
-		/* INTERFACE controller.interfaces.Igessture */
 		
-		public function get duration():int 
-		{
-			return (new Date()).getTime() - date.getTime();
-		}
+		
 		//ENGINE:
 		private function failSwipe():void
 		{
 			swipeFailed = true;
 		}
 		
+		/* INTERFACE controller.interfaces.Igessture */
 		//GETTERS:
+		public function get duration():int 
+		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
+			return (new Date()).getTime() - date.getTime();
+		}
 		public function get vectorDirection():String 
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			var res:String;
 			if (distanceX >  distance * 0.7) res = Direction.RIGHT;
 			if (distanceX < -distance * 0.7) res = Direction.LEFT;
@@ -98,49 +111,59 @@ package simpleController
 		
 		public function get distanceX():int 
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return currPoint.x - startPoint.x;
 		}
 		
 		public function get distanceY():int 
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return currPoint.y - startPoint.y;
 		}
 		
 		public function get isSwipeFailed():Boolean 
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return swipeFailed;
 		}
 		
 		public function get isTapFailed():Boolean 
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return tapFailed;
 		}
 		
 		public function get lastStepX():int 
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return lastStep.x;
 		}
 		
 		public function get lastStepY():int 
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return lastStep.y;
 		}
 		
 		public function get trackLength():int 
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return length;
 		}
 		
 		public function get distance():int 
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return Point.distance(startPoint,currPoint);
 		}
 		public  function  get x():int
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return currPoint.x;
 		}
 		public  function  get y():int
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return currPoint.y;
 		}
 		
@@ -151,6 +174,7 @@ package simpleController
 		
 		public function get id():String 
 		{
+			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return _id;
 		}
 	}

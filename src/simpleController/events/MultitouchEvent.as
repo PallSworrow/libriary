@@ -15,12 +15,13 @@ package simpleController.events
 	public class MultitouchEvent extends Event 
 	{
 		private var _gess:ImultiTouchGess;
-		public static const ZOOM_IN:String='zoomIn';
-		public static const ZOOM_OUT:String = 'zoomOut';
 		
-		public static const ZOOMING:String='zooming'
-		public static const DRAGGING:String = 'dragging';
-		public static const ROTATING:String = 'rotatitng';		
+		public static const GESTURE_START:String = 'mtStart';
+		public static const GESTURE_COMPLETE:String = 'mtComplete';
+		public static const GESTURE_MOVE:String = 'mtMove';
+		public static const GESTURE_ZOOM:String = 'mtZoom';
+		public static const GESTURE_ROTATE:String = 'mtRotate';
+		public static const SWIPE:String = 'mtSwipe';
 		
 		public function MultitouchEvent(type:String,gess:ImultiTouchGess) 
 		{

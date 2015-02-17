@@ -7,9 +7,6 @@ package simpleController.interfaces
 	 */
 	public interface Igessture 
 	{
-		//function update(newX:int, newY:int):void
-		//function complete():String
-		
 		function get isSwipeFailed():Boolean
 		function get isTapFailed():Boolean
 		function get lastStepX():int

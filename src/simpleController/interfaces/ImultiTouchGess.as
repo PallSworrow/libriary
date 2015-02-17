@@ -7,6 +7,14 @@ package simpleController.interfaces
 	 */
 	public interface ImultiTouchGess 
 	{
+		//extension:
+		function get scaleX():Number
+		function get scaleY():Number
+		function get scale():Number
+		function get scaleStepX():Number
+		function get scaleStepY():Number
+		function get scaleStep():Number
+		//from Igessture
 		function get numTouches():int
 		function get lastStepX():int
 		function get lastStepY():int

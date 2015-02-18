@@ -48,43 +48,40 @@ package scrollers
 				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, pos,0,trigger));
 				_position.value = pos;
 				//dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, 0, trigger));
-				completeDispatcher = setTimeout(dispatchComplete,200,new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, 0, trigger));
-				
+				onScrollComplete(from, pos, duration, trigger, snapToPage, onComplete);/*
+				completeDispatcher = setTimeout(dispatchComplete,200,from,pos,duration,trigger);
 				if(snapToPage)
 				snap(onComplete);
 				else  if(onComplete)
 				{
 					onComplete();
-				}
+				}*/
 			}
 			else 
 			{
 				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, pos, duration, trigger));
 				
-			trace(this, 'TWEENMAX');
-				currentTween = TweenMax.to(_position, duration, { value:pos, onUpdate:onScroll, onComplete:onScrollComplete } );
+				currentTween = TweenMax.to(_position, duration, { value:pos, onComplete:onScrollComplete,onCompleteParams:[from,pos,duration,trigger,snapToPage,onComplete] } );
 			}
 			
-			function onScroll():void
+			
+			
+		}
+		function onScrollComplete(from:Number, to:Number,duration:Number, trigger:Object,snapToPage:Boolean,onComplete:Function):void
+		{
+			//прокрутка закончена, snap считается отдельной прокруткой и у него будут собственные start|complete события
+			//dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, duration,trigger));
+			completeDispatcher = setTimeout(dispatchComplete,100,from,to,duration,trigger);
+			if(snapToPage)
+			snap(onComplete);
+			else  if(onComplete)
 			{
-				//события не отправляются чтобы не генерить так много объектов.
-			}
-			function onScrollComplete():void
-			{
-				//прокрутка закончена, snap считается отдельной прокруткой и у него будут собственные start|complete события
-				//dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, duration,trigger));
-				completeDispatcher = setTimeout(dispatchComplete,100,new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, pos, 0, trigger));
-				if(snapToPage)
-				snap(onComplete);
-				else  if (onComplete)
-				{
-					onComplete();
-				}
+				onComplete();
 			}
 		}
-		private function dispatchComplete(e:ScrollerEvent):void
+		private function dispatchComplete(from:Number, to:Number,duration:Number, trigger:Object):void
 		{
-			dispatchEvent(e);
+			dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_COMPLETE, from, to, duration, trigger));
 		}
 		//Оставшийся с поисков решения способ отложить выполнение snap. подумал оставить и сделать настраиваемым. можно удалить
 		private var _snapDelay:uint;

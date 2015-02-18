@@ -17,7 +17,7 @@ package simpleController
 		private var currPoint:Point
 		private var lastStep:Point;
 		
-		private var length:int;
+		private var length:Number;
 		private var swipeFailed:Boolean;
 		private var tapFailed:Boolean;
 	
@@ -40,7 +40,7 @@ package simpleController
 			date = null;
 			clearTimeout(swipeTimer);
 		}
-		public function init(x:int, y:int, id:String):void
+		public function init(x:Number, y:Number, id:String):void
 		{
 			_id = id;
 			_status = 'inited';
@@ -57,7 +57,7 @@ package simpleController
 			date = new Date();
 			swipeTimer = setTimeout(failSwipe, props.swipeMaxDuration);
 		}
-		public function update(newX:int, newY:int):void 
+		public function update(newX:Number, newY:Number):void 
 		{
 			_status = 'moving';
 			lastStep.x = newX - currPoint.x;
@@ -93,7 +93,7 @@ package simpleController
 		
 		/* INTERFACE controller.interfaces.Igessture */
 		//GETTERS:
-		public function get duration():int 
+		public function get duration():Number 
 		{
 			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return (new Date()).getTime() - date.getTime();
@@ -109,13 +109,13 @@ package simpleController
 			return res;
 		}
 		
-		public function get distanceX():int 
+		public function get distanceX():Number 
 		{
 			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return currPoint.x - startPoint.x;
 		}
 		
-		public function get distanceY():int 
+		public function get distanceY():Number 
 		{
 			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return currPoint.y - startPoint.y;
@@ -133,35 +133,35 @@ package simpleController
 			return tapFailed;
 		}
 		
-		public function get lastStepX():int 
+		public function get lastStepX():Number 
 		{
 			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return lastStep.x;
 		}
 		
-		public function get lastStepY():int 
+		public function get lastStepY():Number 
 		{
 			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return lastStep.y;
 		}
 		
-		public function get trackLength():int 
+		public function get trackLength():Number 
 		{
 			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return length;
 		}
 		
-		public function get distance():int 
+		public function get distance():Number 
 		{
 			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return Point.distance(startPoint,currPoint);
 		}
-		public  function  get x():int
+		public  function  get x():Number
 		{
 			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return currPoint.x;
 		}
-		public  function  get y():int
+		public  function  get y():Number
 		{
 			if (_status == 'disposed') throw new Error('this gesture has been disposed');
 			return currPoint.y;

@@ -116,7 +116,7 @@ package simpleController
 		//METHODS:
 		protected function startListening():void
 		{
-			//trace(this, 'START LISTENING');
+			trace(this, 'START LISTENING',inputMode);
 			if (inputMode == InputMode.MOUSE)
 				item.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown,false,0,true)
 				
@@ -141,17 +141,21 @@ package simpleController
 		//ENGINE:
 		private var gesstures:Dictionary;
 		private var touchGessCount:int = 0;//mouse gess count always = 0/1)
-		private function _onGestureStart(X:int,Y:int,id:String):void
+		private function _onGestureStart(X:Number,Y:Number,id:String):void
 		{
+			trace('NEW GESS: ' + id);
 			if (!globalStage)
 			{
 				globalStage = getStage(item);
 			}
 			var gess:Gess;
-			if (id = 'mouse')
+			if (id == 'mouse')
 			{
 				globalStage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove,false,0,true);
 				globalStage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				
+				if (gesstures[id])
+				throw new Error("previos " + id + " gess hasn's been complete");
 			}
 			else
 			{
@@ -165,42 +169,49 @@ package simpleController
 			//else 
 			//throw new Error('invalid gess start event: ' + e);
 			
-			if (gesstures[id])
-			throw new Error("previos " + id + " gess hasn's been complete");
 			
 			gess = createGesture();
 			gess.init(X, Y, id);
 			gesstures[id] = gess;
 			
 			//dispatch:
+			onGessStart(gess);
 			dispatchCE(ControllerEvent.GESSTURE_START, gess);
 			
 			
-			onGessStart(gess);
 			
 		}
-		protected function _onGestureUpdate(X:int,Y:int,id:String):void
+		protected function _onGestureUpdate(X:Number,Y:Number,id:String):void
 		{
 			var gess:Gess;
 			var id:String;
 			
 			if (!gesstures[id]) 
-			throw new Error(id + " gessture hasn't been inited before update() call");
+			{
+				if(id == 'mouse')
+				throw new Error(id + " gessture hasn't been inited before update() call");
+				else
+				return;
+			}
 			
 			gess = gesstures[id];
 			gess.update(X, Y);
 			
 			//dispatch:
+			onGessUpdate(gess);
 			dispatchCE(ControllerEvent.GESSTURE_UPDATE, gess);
 			
-			onGessUpdate(gess);
 		
 		}
-		protected function _onGestureComplete(X:int,Y:int,id:String):void
+		protected function _onGestureComplete(X:Number,Y:Number,id:String):void
 		{
 			if (!gesstures[id]) 
-			throw new Error(id+" gessture hasn't been inited before complete() call");
-			
+			{
+				if(id == 'mouse')
+				throw new Error(id + " gessture hasn't been inited before update() call");
+				else
+				return;
+			}
 			var gess:Gess;
 			var id:String;
 			var res:String;
@@ -226,9 +237,9 @@ package simpleController
 			
 			if (res) dispatchCE(res, gess);//tap|swipe
 			//dispatch:
+			onGessComplete(gess);
 			dispatchCE(ControllerEvent.GESSTURE_COMPLETE, gess);
 			
-			onGessComplete(gess);
 			
 			
 			delete gesstures[id];
@@ -260,11 +271,11 @@ package simpleController
 			
 		}
 		//EVENTS:
-		private function onMouseDown(e:MouseEvent):void { _onGestureStart(e.stageX, e.stageY, 'mouse'); }
+		private function onMouseDown(e:MouseEvent):void {_onGestureStart(e.stageX, e.stageY, 'mouse'); }
 		private function onMouseMove(e:MouseEvent):void { _onGestureUpdate(e.stageX, e.stageY, 'mouse'); }
 		private function onMouseUp(e:MouseEvent):void 	{ _onGestureComplete(e.stageX, e.stageY, 'mouse'); }
-		private function onTouchStart(e:TouchEvent):void{ _onGestureStart(e.stageX, e.stageY, 'touch'+e.touchPointID); }
-		private function onTouchMove(e:TouchEvent):void { _onGestureStart(e.stageX, e.stageY, 'touch'+e.touchPointID); }
+		private function onTouchStart(e:TouchEvent):void {  _onGestureStart(e.stageX, e.stageY, 'touch' + e.touchPointID); }
+		private function onTouchMove(e:TouchEvent):void { _onGestureUpdate(e.stageX, e.stageY, 'touch'+e.touchPointID); }
 		private function onTouchEnd(e:TouchEvent):void  { _onGestureComplete(e.stageX, e.stageY, 'touch'+e.touchPointID); }
 	}
 

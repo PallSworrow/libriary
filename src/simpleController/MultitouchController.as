@@ -5,6 +5,7 @@ package simpleController
 	import flash.events.Event;
 	import simpleController.events.ControllerEvent;
 	import simpleController.events.MultitouchEvent;
+	import simpleController.interfaces.ImultiTouchGess;
 	
 	/**
 	 * ...
@@ -12,15 +13,22 @@ package simpleController
 	 */
 	public class MultitouchController extends Controller 
 	{
-		private var iterator:Shape;
+		private static var iterator:Shape;
 		public function MultitouchController(item:InteractiveObject) 
 		{
 			super(item);
-			iterator = new Shape();
+			gesture = new MultiGess(parameters);
+			if(!iterator) iterator = new Shape();
+		}
+		public function get currentGesture():ImultiTouchGess
+		{
+			if (gesture.state == 'disposed') return null;
+			else return gesture;
 		}
 		override public function abort():void 
 		{
 			super.abort();
+			
 			gesture.dispose();
 			iterator.removeEventListener(Event.ENTER_FRAME, iterator_enterFrame);
 		}
@@ -34,7 +42,6 @@ package simpleController
 		private var gesture:MultiGess;
 		override protected function onGessStart(gess:Gess):void 
 		{
-			if (!gesture) gesture = new MultiGess(parameters);
 			
 			gesture.addGess(gess);
 			
@@ -42,11 +49,9 @@ package simpleController
 			{
 				gesture.init();
 				dispatchME(MultitouchEvent.GESTURE_START);
+				iterator.addEventListener(Event.ENTER_FRAME, iterator_enterFrame,false,0,true);
 			}
-			testGess = new Gess(parameters);
-			testGess.init(0, 0, 'test');
-			gesture.addGess(testGess);
-			iterator.addEventListener(Event.ENTER_FRAME, iterator_enterFrame,false,0,true);
+			//gesture.addGess(testGess);
 			
 		}
 		private function iterator_enterFrame(e:Event):void 
@@ -55,15 +60,17 @@ package simpleController
 			gesture.update();
 			if(gesture.lastStepX !=0 || gesture.lastStepY !=0)
 			dispatchME(MultitouchEvent.GESTURE_MOVE);
+			if (gesture.rotationStep != 0)
+			dispatchME(MultitouchEvent.GESTURE_ROTATE);
 			
-			if (gesture.scaleStep != 0)
+			if (gesture.scaleStep != 1)
 			dispatchME(MultitouchEvent.GESTURE_ZOOM);
 			
 		}
 		override protected function onGessComplete(gess:Gess):void 
 		{
 			gesture.removeGess(gess);
-			gesture.removeGess(testGess);
+			//gesture.removeGess(testGess);
 			var res:String;
 			if (gesture.numTouches == 0)
 			{
@@ -79,41 +86,7 @@ package simpleController
 			}
 		}
 		
-		/*override protected function onGesstureStart(e:Object):Gess 
-		{
-			var gess:Gess = super.onGesstureStart(e);
-			
-			if (!gessture) 
-			{
-				gessture = new MultiGess(gess, 'multitouch', parameters);
-				iterator.addEventListener(Event.ENTER_FRAME, iterator_enterFrame);
-			}
-			else gessture.addGess(gess);
-			
-			return gess;
-		}
-		private function iterator_enterFrame(e:Event):void 
-		{
-			if (!gessture) return;
-			gessture.update();
-			
-			dispatchME(MultitouchEvent.DRAGGING, gessture);
-		}
-		override protected function onGesstureComplete(e:Object):Gess 
-		{
-			var gess:Gess = super.onGesstureComplete(e);
-			if (gessture)
-			{
-				gessture.removeGess(gess);
-				if (gessture.numTouches == 0)
-				{
-					iterator.removeEventListener(Event.ENTER_FRAME, iterator_enterFrame);
-					gessture.complete();
-					gessture = null;
-				}
-			}
-			return gess;
-		}*/
+		
 		private function dispatchME(type:String):void
 		{
 			dispatchEvent(new MultitouchEvent(type, gesture));

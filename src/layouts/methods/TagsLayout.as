@@ -1,6 +1,5 @@
 package layouts.methods 
 {
-	import _examples.ControllerExample;
 	import constants.AlignType;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;

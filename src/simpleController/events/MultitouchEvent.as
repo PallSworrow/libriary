@@ -18,9 +18,7 @@ package simpleController.events
 		
 		public static const GESTURE_START:String = 'mtStart';
 		public static const GESTURE_COMPLETE:String = 'mtComplete';
-		public static const GESTURE_MOVE:String = 'mtMove';
-		public static const GESTURE_ZOOM:String = 'mtZoom';
-		public static const GESTURE_ROTATE:String = 'mtRotate';
+		public static const GESTURE_UPDATE:String = 'mtMove';
 		public static const SWIPE:String = 'mtSwipe';
 		
 		public function MultitouchEvent(type:String,gess:ImultiTouchGess) 

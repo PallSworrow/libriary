@@ -192,7 +192,11 @@ package simpleController
 			summ.update(summ.x + deltaX / listLength, summ.y + deltaY / listLength);
 			
 			//caclulate rotation:
-			if (listLength < 2) return;
+			if (listLength == 0)
+			{
+				_rotationStep = 0;
+				return;
+			}
 			var angle:Number;
 			var delta:Number=0;
 			var dif:Number;
@@ -203,7 +207,7 @@ package simpleController
                 dif = angle - pt.angle;
                 dif += (dif > 180) ? -360 : (dif < -180) ? 360 : 0;
 				delta += dif;
-				points[j].angle = angle;
+				pt.angle = angle;
 			}
 			_rotationStep = Math.round(100 * delta / listLength) / 100;
 			_rotation += _rotationStep;

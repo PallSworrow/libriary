@@ -22,7 +22,7 @@ package _examples
 	 */
 	public class ControllerExample extends Sprite 
 	{
-		private var controller:Controller
+		private var controller:MultitouchController
 		private var trigger:Sprite;
 		private var tf:TextField;
 		private var gessCenter:Shape;
@@ -66,9 +66,9 @@ package _examples
 			controller.addEventListener(ControllerEvent.GESSTURE_START, onControllerEvent);
 			
 			controller.addEventListener(MultitouchEvent.GESTURE_START, onStart);
-			controller.addEventListener(MultitouchEvent.GESTURE_MOVE, onMove);
-			controller.addEventListener(MultitouchEvent.GESTURE_ZOOM, onScale);
+			controller.addEventListener(MultitouchEvent.GESTURE_UPDATE, onMove);
 			controller.addEventListener(MultitouchEvent.GESTURE_COMPLETE, onComplete);
+			controller.startDrag(true, true);
 		}
 		
 		private function onComplete(e:MultitouchEvent):void 
@@ -86,25 +86,23 @@ package _examples
 			Tscale = trigger.scaleX;
 		}
 		
-		private function onScale(e:MultitouchEvent):void 
-		{
-			//zooming:
-			//trace('=>', trigger.scaleX * e.gessture.scaleStep);
-			//trigger.scaleX = trigger.scaleY = Tscale * e.gessture.scale
-			//trace('scale: ' + trigger.scaleX);
-			//scaleAroundPoint(trigger, e.gessture.scaleStep, new Point(e.gessture.x, e.gessture.y));
-			trace(trigger.globalToLocal(new Point(e.gessture.x, e.gessture.y)));
-		}
-		
+	
 		private function onMove(e:MultitouchEvent):void 
 		{
 			gessCenter.x = e.gessture.x;
 			gessCenter.y = e.gessture.y;
-			//DRAGG & ROTATE:
-			trigger.x += e.gessture.lastStepX;
-			trigger.y += e.gessture.lastStepY;
 			
-			trace(trigger.globalToLocal(new Point(e.gessture.x, e.gessture.y)));
+			//DRAGG & ROTATE:
+		/*	trigger.x += e.gessture.lastStepX;
+			trigger.y += e.gessture.lastStepY;
+			var pt:Point = trigger.globalToLocal(new Point( e.gessture.x,  e.gessture.y));
+			trigger.scaleX *= e.gessture.scaleStep; 
+			trigger.scaleY *= e.gessture.scaleStep;
+			trigger.rotation += e.gessture.rotationStep;
+			pt = trigger.localToGlobal(pt);
+			trigger.x = trigger.x+( e.gessture.x-pt.x);
+			trigger.y = trigger.y+( e.gessture.y-pt.y);
+			*/
 			//rotateAroundPoint(trigger,e.gessture.rotationStep,new Point(e.gessture.x,e.gessture.y));
 		}
 	

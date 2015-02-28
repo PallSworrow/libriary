@@ -20,13 +20,13 @@ package _examples
 	 * ...
 	 * @author 
 	 */
-	public class ControllerExample extends Sprite 
+	public class ControllerExample2 extends Sprite 
 	{
 		private var controller:MultitouchController
 		private var trigger:Sprite;
 		private var tf:TextField;
 		private var gessCenter:Shape;
-		public function ControllerExample() 
+		public function ControllerExample2() 
 		{
 			super();
 			gessCenter = new Shape();
@@ -56,18 +56,17 @@ package _examples
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			controller.inputMode = InputMode.TOUCH;
 			//вешаем слушатели:
-			/*
-			controller.addEventListener(ControllerEvent.GESSTURE_COMPLETE, onControllerEvent);
-			controller.addEventListener(ControllerEvent.TAP,onTap)
-			controller.addEventListener(ControllerEvent.SWIPE, onSwipe)
-			controller.addEventListener(ControllerEvent.GESSTURE_UPDATE, onMove);*/
+			
 			//так можно включать и выключать контроллер:
 			//controller.enable = false;
-			controller.addEventListener(ControllerEvent.GESSTURE_START, onControllerEvent);
+			//singe point gesture
+			controller.addEventListener(ControllerEvent.GESSTURE_START, onNewTouch);
 			
+			//multitouch gesture
 			controller.addEventListener(MultitouchEvent.GESTURE_START, onStart);
-			controller.addEventListener(MultitouchEvent.GESTURE_UPDATE, onMove);
+			controller.addEventListener(MultitouchEvent.GESTURE_UPDATE, onMultitouchDrag);
 			controller.addEventListener(MultitouchEvent.GESTURE_COMPLETE, onComplete);
+			//multitouch dragging (scale, rotate)
 			controller.startDrag(true, true);
 		}
 		
@@ -75,38 +74,23 @@ package _examples
 		{
 			gessCenter.visible = false;
 		}
-		private var Tscale:Number;
 		private function onStart(e:MultitouchEvent):void 
 		{
 			gessCenter.visible = true;
 			gessCenter.x = e.gessture.x;
 			gessCenter.y = e.gessture.y;
 			
-			//ZOOMING:
-			Tscale = trigger.scaleX;
 		}
 		
 	
-		private function onMove(e:MultitouchEvent):void 
+		private function onMultitouchDrag(e:MultitouchEvent):void 
 		{
 			gessCenter.x = e.gessture.x;
 			gessCenter.y = e.gessture.y;
 			
-			//DRAGG & ROTATE:
-		/*	trigger.x += e.gessture.lastStepX;
-			trigger.y += e.gessture.lastStepY;
-			var pt:Point = trigger.globalToLocal(new Point( e.gessture.x,  e.gessture.y));
-			trigger.scaleX *= e.gessture.scaleStep; 
-			trigger.scaleY *= e.gessture.scaleStep;
-			trigger.rotation += e.gessture.rotationStep;
-			pt = trigger.localToGlobal(pt);
-			trigger.x = trigger.x+( e.gessture.x-pt.x);
-			trigger.y = trigger.y+( e.gessture.y-pt.y);
-			*/
-			//rotateAroundPoint(trigger,e.gessture.rotationStep,new Point(e.gessture.x,e.gessture.y));
 		}
 	
-		private function onControllerEvent(e:ControllerEvent):void
+		private function onNewTouch(e:ControllerEvent):void
 		{
 			trace('--- controller event  -----')
 			trace('type:', e.type);
@@ -120,20 +104,11 @@ package _examples
 			trace('======================= \n');
 			if(e.gessture.isSwipeFailed && e.gessture.isTapFailed)
 			tf.text  = '';
+			
 			gessCenter.x = (controller as MultitouchController).currentGesture.x;
 			gessCenter.y = (controller as MultitouchController).currentGesture.y;
-			
-			trigger.x += e.gessture.lastStepX;
-			trigger.y += e.gessture.lastStepY;
 		}
-		private function onTap(e:ControllerEvent):void
-		{
-			tf.text = 'TAP';
-		}
-		private function onSwipe(e:ControllerEvent):void
-		{
-			tf.text = 'SWIPE: ' + e.gessture.vectorDirection;
-		}
+	
 	}
 
 }

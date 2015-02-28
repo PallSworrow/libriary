@@ -92,8 +92,9 @@ package simpleController
 				if(rotating)
 					item.rotation += gesture.rotationStep;
 				pt = item.localToGlobal(pt);
-				item.x += gesture.x-pt.x;
-				item.y += gesture.y-pt.y;
+				//trace(gesture.x - pt.x);
+				item.x += Math.round(gesture.x-pt.x);
+				item.y += Math.round(gesture.y-pt.y);
 				
 				
 			}

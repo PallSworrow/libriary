@@ -1,7 +1,6 @@
 package 
 {
 	import _examples.ButtonExample;
-	import _examples.ControllerExample;
 	import _examples.PopupExample;
 	import _examples.ScrollerExample;
 	import antares.BasicFunctional;
@@ -48,8 +47,8 @@ package
 		public function Main():void 
 		{ 
 			//addChild(new ButtonExample());
-			//addChild(new ScrollerExample());
-			addChild(new ControllerExample());
+			addChild(new ScrollerExample());
+			//addChild(new ControllerExample());
 			//addChild(new LayoutExample());
 			
 			

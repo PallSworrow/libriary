@@ -246,7 +246,7 @@ package scrollers.bases
 			{
 				//Независимая от скроллера прокрутка. объект anim создан ради сохранения инкапсуляции, так как в противном случае пришлось бы делать свойство _position публичным.
 				anim = { position:_position };
-				currentTween = TweenMax.to(anim, duration, { position:targPosition, onComplete:onComplete,
+				currentTween = TweenMax.to(anim, duration, {overwrite: true, position:targPosition, onComplete:onComplete,
 				onUpdate:function():void
 				{
 					_position = anim.position;
@@ -343,8 +343,8 @@ package scrollers.bases
 		
 		protected function set currentTween(value:TweenMax):void 
 		{
-			if (_currentTween)
-			_currentTween.kill();
+			//if (_currentTween)
+			//_currentTween.kill();
 			_currentTween = value;
 		}
 		protected function get masked():Boolean 

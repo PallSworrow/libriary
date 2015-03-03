@@ -61,7 +61,7 @@ package scrollers
 			{
 				dispatchEvent(new ScrollerEvent(ScrollerEvent.SCROLL_START, from, pos, duration, trigger));
 				
-				currentTween = TweenMax.to(_position, duration, { value:pos, onComplete:onScrollComplete,onCompleteParams:[from,pos,duration,trigger,snapToPage,onComplete] } );
+				currentTween = TweenMax.to(_position, duration, { overwrite: true, value:pos, onComplete:onScrollComplete,onCompleteParams:[from,pos,duration,trigger,snapToPage,onComplete] } );
 			}
 			
 			
